@@ -1,2 +1,5 @@
-# CG
-Repositório para entrega de trabalhos da disciplina de Computação Gráfica / UNIFESP
+# Computação Gráfica (CG) — UNIFESP
+
+Repositório destinado às atividades e trabalhos da disciplina de Computação Gráfica.
+
+Universidade Federal de São Paulo — UNIFESP
