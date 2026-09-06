@@ -343,8 +343,8 @@ function drawBolaCentro(){
 
 let tyBE = 0.0;
 let tyBD = 0.0;
-let txBE_offset = 0.01;
-let txBD_offset = 0.01;
+let tyBE_offset = 0.01;
+let tyBD_offset = 0.01;
 let txBola = 0.0;
 let tyBola = 0.0;
 let txBola_offset = 0.005;
@@ -361,9 +361,27 @@ function atualizaAnimacao(){
         tyBola_offset = -tyBola_offset;
 
     MbolaCentro = m3.translation(txBola,tyBola);
+    MbarraDireita = m3.translation(0.0, tyBD);
 }
 
 
+// --------------------------------------------------
+// INTERAÇÃO COM O TECLADO
+// --------------------------------------------------
+document.addEventListener("keydown", keyboardClick, false);
+
+function keyboardClick(event) {
+
+  switch(event.key) {
+      case ("ArrowUp"):
+          if (tyBD < 1.0)
+              tyBD += tyBD_offset;
+          break;
+      case ("ArrowDown"):
+          if (tyBD > -1.0)
+              tyBD -= tyBD_offset;
+          break;
+  }
 // --------------------------------------------------
 // INÍCIO DO DESENHO
 // --------------------------------------------------
