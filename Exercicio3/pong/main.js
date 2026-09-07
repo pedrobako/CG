@@ -394,6 +394,18 @@ function bolaTocaBarra(){
 
 function atualizaAnimacao(){
 
+    if ((teclaUp)&&(tyBD < 0.8))
+        tyBD += tyBD_offset;
+
+    if ((teclaDown)&&(tyBD > -0.8))
+        tyBD -= tyBD_offset;
+    
+    if ((teclaW)&&(tyBE < 0.8))
+        tyBE += tyBE_offset;
+
+    if ((teclaS)&&(tyBE > -0.8))
+        tyBE -= tyBE_offset;
+
     txBola += txBola_offset;
     if (bolaTocaBarra())
         txBola_offset = -txBola_offset;
@@ -417,35 +429,57 @@ function atualizaAnimacao(){
 // --------------------------------------------------
 // INTERAÇÃO COM O TECLADO
 // --------------------------------------------------
+let teclaW = false;
+let teclaS = false;
+let teclaUp = false;
+let teclaDown = false;
+
 function keyboardClick(event) {
 
     switch(event.key) {
       case ("ArrowUp"):
-          if (tyBD < 0.8)
-              tyBD += tyBD_offset;
-          break;
+        teclaUp = true;
+        break;
       case ("ArrowDown"):
-          if (tyBD > -0.8)
-              tyBD -= tyBD_offset;
-          break;
+        teclaDown = true;
+        break;
       case ("w"):
       case ("W"):
-          if (tyBE < 0.8)
-              tyBE += tyBE_offset;
-          break;
+        teclaW = true;
+        break;
       case ("s"):
       case ("S"):
-          if (tyBE > -0.8)
-              tyBE -= tyBE_offset;
-          break;
+        teclaS = true;
+        break;
       case (" "):
-          lancaBola = true;
-          drawScene();
-          break;
+        lancaBola = true;
+        drawScene();
+        break;
+  }
+}
+
+function keyboardRelease(event) {
+
+    switch(event.key) {
+      case ("ArrowUp"):
+        teclaUp = false;
+        break;
+      case ("ArrowDown"):
+        teclaDown = false;
+        break;
+      case ("w"):
+      case ("W"):
+        teclaW = false;
+        break;
+      case ("s"):
+      case ("S"):
+        teclaS = false;
+        break;
   }
 }
 
 window.addEventListener("keydown", keyboardClick, false);
+window.addEventListener("keyup", keyboardRelease, false);
 // --------------------------------------------------
 // INÍCIO DO DESENHO
 // --------------------------------------------------
