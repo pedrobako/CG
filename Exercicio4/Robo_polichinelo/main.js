@@ -93,7 +93,7 @@ class SceneObject{
 }
 
 //-------------------------------------------------------
-//CLASSE ROBÔ
+//CLASSES ROBÔ
 //-------------------------------------------------------
 class Robo extends SceneObject{
 	constructor(cabeca, tronco, bracoEsquerdo, bracoDireito, pernaEsquerda, pernaDireita){
@@ -107,16 +107,39 @@ class Robo extends SceneObject{
 	}
 }
 
+class Cabeca extends SceneObject{
+	constructor(vertices, cor){
+		super(vertices, cor);
+	}
+}
+
+class Tronco extends SceneObject{
+	constructor(vertices, cor){
+		super(vertices, cor);
+	}
+}
+
+class Braco extends SceneObject{
+	constructor(vertices, cor){
+		super(vertices, cor);
+	}
+}
+
+class Perna extends SceneObject{
+	constructor(vertices, cor){
+		super(vertices, cor);
+	}
+}
 //-------------------------------------------------------
 //CRIANDO OS OBJETOS (INSTANCIANDO OBJECT SCENE)
 //E INSTANCIANDO UM ROBÔ
 //-------------------------------------------------------
-const tronco = new SceneObject(verticesTronco, corTronco);
-const cabeca = new SceneObject(verticesCabeca, corCabeca);
-const bracoEsquerdo = new SceneObject(verticesBracoEsquerdo, corBracoEsquerdo);
-const bracoDireito = new SceneObject(verticesBracoDireito, corBracoDireito);
-const pernaEsquerda = new SceneObject(verticesPernaEsquerda, corPernaEsquerda);
-const pernaDireita = new SceneObject(verticesPernaDireita, corPernaDireita);
+const tronco = new Tronco(verticesTronco, corTronco);
+const cabeca = new Cabeca(verticesCabeca, corCabeca);
+const bracoEsquerdo = new Braco(verticesBracoEsquerdo, corBracoEsquerdo);
+const bracoDireito = new Braco(verticesBracoDireito, corBracoDireito);
+const pernaEsquerda = new Perna(verticesPernaEsquerda, corPernaEsquerda);
+const pernaDireita = new Perna(verticesPernaDireita, corPernaDireita);
 const robo = new Robo(cabeca, tronco, bracoEsquerdo, bracoDireito, pernaEsquerda, pernaDireita);
 
 //-------------------------------------------------------
