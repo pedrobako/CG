@@ -79,6 +79,20 @@ const corPernaDireita = new Float32Array([1.0, 0.0, 0.0]);
 const verticesBuffer = gl.createBuffer();
 
 //-------------------------------------------------------
+//CLASSE SCENE OBJECT
+//-------------------------------------------------------
+class SceneObject{
+	constructor(vertices, cor){
+		this.vertices = vertices;
+		this.cor = cor;
+		this.modelTransform = m3.identity();
+	}
+	atualizarTransformacao(modelTransform){
+		this.modelTransform = modelTransform;
+	}
+}
+
+//-------------------------------------------------------
 //VERTEX SHADER
 //-------------------------------------------------------
 const vertexShaderSource = `#version 300 es
