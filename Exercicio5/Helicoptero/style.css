@@ -124,11 +124,11 @@ h1 {
     /*
        No notebook:
 
-       O canvas pode chegar a 600px.
+       até 600px de apresentação.
 
-       Se a janela ficar com pouca altura,
-       ele diminui proporcionalmente para
-       evitar rolagem vertical.
+       Se a janela tiver pouca altura,
+       o canvas diminui proporcionalmente
+       para evitar rolagem.
     */
 
     width:
@@ -172,11 +172,10 @@ canvas {
     display: block;
 
     /*
-       O canvas continua com 600x600
-       de resolução no HTML.
+       O canvas continua 600x600 no HTML.
 
-       Aqui controlamos somente
-       a apresentação visual.
+       Estas propriedades alteram somente
+       o tamanho de apresentação.
     */
 
     width: 100%;
@@ -197,18 +196,19 @@ canvas {
 
 .control-panel {
 
+    position: relative;
+
     width: 100%;
 
-    display: grid;
+    min-height: 96px;
 
-    grid-template-columns:
-        1fr
-        auto
-        1fr;
+    display: flex;
+
+    justify-content: space-between;
 
     align-items: center;
 
-    column-gap: 25px;
+    padding: 0 5px;
 
     flex-shrink: 0;
 
@@ -226,7 +226,9 @@ canvas {
 
     align-items: center;
 
-    gap: 10px;
+    gap: 8px;
+
+    flex-shrink: 0;
 
     touch-action: none;
 }
@@ -250,9 +252,15 @@ canvas {
 
 .control-button {
 
-    width: 100px;
+    width: 86px;
 
-    height: 100px;
+    height: 86px;
+
+    min-width: 86px;
+
+    min-height: 86px;
+
+    flex-shrink: 0;
 
     display: flex;
 
@@ -285,7 +293,9 @@ canvas {
     outline: none;
 
     user-select: none;
+
     -webkit-user-select: none;
+
     -webkit-touch-callout: none;
 
     touch-action: none;
@@ -326,9 +336,24 @@ canvas {
 
 .start-button {
 
+    position: absolute;
+
+    left: 50%;
+
+    top: 50%;
+
+    transform:
+        translate(-50%, -50%);
+
     width: 96px;
 
     height: 96px;
+
+    min-width: 96px;
+
+    min-height: 96px;
+
+    flex-shrink: 0;
 
     display: flex;
 
@@ -352,7 +377,9 @@ canvas {
     outline: none;
 
     user-select: none;
+
     -webkit-user-select: none;
+
     -webkit-touch-callout: none;
 
     touch-action: none;
@@ -377,8 +404,13 @@ canvas {
 
 .start-button:active {
 
+    /*
+       Mantemos o deslocamento do botão,
+       mas preservamos a centralização.
+    */
+
     transform:
-        translateY(4px);
+        translate(-50%, calc(-50% + 4px));
 
     box-shadow:
         0 0 0 #0f172a;
@@ -537,9 +569,7 @@ canvas {
 
         /*
            Prioridade no celular:
-
-           ocupar toda a largura disponível
-           do container.
+           ocupar toda a largura disponível.
         */
 
         width: 100%;
@@ -575,50 +605,109 @@ canvas {
 
 
     /* ==================================================
-       CONTROLES NO CELULAR
+       CONTROLES DO CELULAR
     ================================================== */
 
     .control-panel {
 
+        position: relative;
+
         width: 100%;
 
-        grid-template-columns:
-            1fr
-            auto
-            1fr;
+        min-height: 96px;
 
-        column-gap: 5px;
+        display: flex;
+
+        justify-content: space-between;
+
+        align-items: center;
+
+        padding:
+            0 5px;
+
+        column-gap: 0;
 
         flex-shrink: 0;
+
+        touch-action: none;
     }
 
 
     .control-group {
 
-        gap: 5px;
+        display: flex;
+
+        align-items: center;
+
+        gap: 8px;
+
+        flex-shrink: 0;
+
+        touch-action: none;
+    }
+
+
+    .control-group.left {
+
+        justify-content: flex-start;
+    }
+
+
+    .control-group.right {
+
+        justify-content: flex-end;
     }
 
 
     /*
-       Mesmo tamanho grande usado
-       no notebook.
+       Botões grandes no celular.
     */
 
     .control-button {
 
-        width: 86px;
+        width: 86px !important;
 
-        height: 86px;
+        height: 86px !important;
+
+        min-width: 86px;
+
+        min-height: 86px;
 
         font-size: 38px;
+
+        flex-shrink: 0;
+
+        touch-action: none;
     }
 
 
+    /*
+       Botão central.
+
+       Ele não participa da divisão
+       horizontal do espaço.
+    */
+
     .start-button {
 
-        width: 96px;
+        position: absolute;
 
-        height: 96px;
+        left: 50%;
+
+        top: 50%;
+
+        width: 96px !important;
+
+        height: 96px !important;
+
+        min-width: 96px;
+
+        min-height: 96px;
+
+        transform:
+            translate(-50%, -50%);
+
+        flex-shrink: 0;
     }
 
 
@@ -667,23 +756,35 @@ canvas {
     }
 
 
+    .control-panel {
+
+        min-height: 90px;
+
+        padding:
+            0 3px;
+    }
+
+
     .control-group {
 
-        gap: 3px;
+        gap: 4px;
     }
 
 
     /*
-       Pequena redução para celulares
-       muito estreitos, para garantir que
-       os quatro botões continuem cabendo.
+       Pequena redução somente em celulares
+       realmente estreitos.
     */
 
     .control-button {
 
-        width: 80px;
+        width: 80px !important;
 
-        height: 80px;
+        height: 80px !important;
+
+        min-width: 80px;
+
+        min-height: 80px;
 
         font-size: 36px;
     }
@@ -691,8 +792,20 @@ canvas {
 
     .start-button {
 
-        width: 90px;
+        width: 90px !important;
 
-        height: 90px;
+        height: 90px !important;
+
+        min-width: 90px;
+
+        min-height: 90px;
+    }
+
+
+    .power-icon {
+
+        width: 34px;
+
+        height: 34px;
     }
 }
