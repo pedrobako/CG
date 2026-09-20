@@ -58,6 +58,10 @@ class Scene {
 	
 	setupControls() {
 
+		document.addEventListener("contextmenu", (event) => {
+        event.preventDefault();
+    	});
+
 		const botoes = {
 			btnLeft: "ArrowLeft",
 			btnRight: "ArrowRight",
