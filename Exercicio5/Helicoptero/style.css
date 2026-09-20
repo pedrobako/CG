@@ -58,11 +58,6 @@ body {
 
     max-width: 100vw;
 
-    /*
-       Impede que o conteúdo ultrapasse
-       a altura disponível do notebook.
-    */
-
     max-height: 100dvh;
 
     display: flex;
@@ -121,7 +116,7 @@ h1 {
 
 
 /* ==================================================
-   CANVAS - PADRÃO / NOTEBOOK
+   CANVAS - NOTEBOOK
 ================================================== */
 
 .canvas-container {
@@ -131,13 +126,9 @@ h1 {
 
        O canvas pode chegar a 600px.
 
-       Porém, quando a janela fica baixa,
+       Se a janela ficar com pouca altura,
        ele diminui proporcionalmente para
        evitar rolagem vertical.
-
-       230px são reservados aproximadamente
-       para título, controles, rodapé,
-       espaçamentos e margens.
     */
 
     width:
@@ -151,10 +142,6 @@ h1 {
             600px,
             calc(100dvh - 230px)
         );
-
-    /*
-       Mantém sempre quadrado.
-    */
 
     aspect-ratio: 1 / 1;
 
@@ -185,13 +172,11 @@ canvas {
     display: block;
 
     /*
-       IMPORTANTE:
+       O canvas continua com 600x600
+       de resolução no HTML.
 
-       O canvas continua tendo 600x600
-       no HTML.
-
-       Estas propriedades controlam
-       apenas o tamanho visual.
+       Aqui controlamos somente
+       a apresentação visual.
     */
 
     width: 100%;
@@ -207,7 +192,7 @@ canvas {
 
 
 /* ==================================================
-   PAINEL DE CONTROLES
+   PAINEL DOS CONTROLES
 ================================================== */
 
 .control-panel {
@@ -265,9 +250,9 @@ canvas {
 
 .control-button {
 
-    width: 74px;
+    width: 86px;
 
-    height: 74px;
+    height: 86px;
 
     display: flex;
 
@@ -280,7 +265,7 @@ canvas {
     border:
         1px solid #475569;
 
-    border-radius: 12px;
+    border-radius: 14px;
 
     background: #1e293b;
 
@@ -291,7 +276,7 @@ canvas {
         Helvetica,
         sans-serif;
 
-    font-size: 32px;
+    font-size: 38px;
 
     line-height: 1;
 
@@ -341,9 +326,9 @@ canvas {
 
 .start-button {
 
-    width: 86px;
+    width: 96px;
 
-    height: 86px;
+    height: 96px;
 
     display: flex;
 
@@ -410,9 +395,9 @@ canvas {
 
     position: relative;
 
-    width: 32px;
+    width: 36px;
 
-    height: 32px;
+    height: 36px;
 
     display: block;
 
@@ -434,11 +419,11 @@ canvas {
 
     left: 50%;
 
-    top: -8px;
+    top: -9px;
 
     width: 5px;
 
-    height: 19px;
+    height: 21px;
 
     transform:
         translateX(-50%);
@@ -510,13 +495,6 @@ canvas {
 
         max-height: none;
 
-        /*
-           Pequenas margens laterais.
-
-           O canvas vai ocupar praticamente
-           toda a largura da tela.
-        */
-
         padding:
             10px
             5px
@@ -558,19 +536,10 @@ canvas {
     .canvas-container {
 
         /*
-           AQUI ESTÁ A PRINCIPAL DIFERENÇA.
+           Prioridade no celular:
 
-           O canvas ocupa 100% da largura
+           ocupar toda a largura disponível
            do container.
-
-           Portanto, se o celular tiver
-           390px de largura, o canvas visual
-           terá aproximadamente 380px.
-
-           Se tiver 740px, terá aproximadamente
-           730px.
-
-           A resolução interna continua 600x600.
         */
 
         width: 100%;
@@ -630,29 +599,34 @@ canvas {
     }
 
 
+    /*
+       Mesmo tamanho grande usado
+       no notebook.
+    */
+
     .control-button {
 
-        width: 74px;
+        width: 86px;
 
-        height: 74px;
+        height: 86px;
 
-        font-size: 32px;
+        font-size: 38px;
     }
 
 
     .start-button {
 
-        width: 86px;
+        width: 96px;
 
-        height: 86px;
+        height: 96px;
     }
 
 
     .power-icon {
 
-        width: 32px;
+        width: 36px;
 
-        height: 32px;
+        height: 36px;
     }
 
 
@@ -660,7 +634,7 @@ canvas {
 
         width: 5px;
 
-        height: 19px;
+        height: 21px;
     }
 
 
@@ -699,20 +673,26 @@ canvas {
     }
 
 
+    /*
+       Pequena redução para celulares
+       muito estreitos, para garantir que
+       os quatro botões continuem cabendo.
+    */
+
     .control-button {
 
-        width: 68px;
+        width: 80px;
 
-        height: 68px;
+        height: 80px;
 
-        font-size: 30px;
+        font-size: 36px;
     }
 
 
     .start-button {
 
-        width: 80px;
+        width: 90px;
 
-        height: 80px;
+        height: 90px;
     }
 }
