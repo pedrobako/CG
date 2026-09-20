@@ -10,11 +10,17 @@
 
     <title>Helicopter</title>
 
+
     <style>
 
         * {
             box-sizing: border-box;
         }
+
+
+        /* ==================================================
+           PÁGINA
+        ================================================== */
 
         body {
             margin: 0;
@@ -74,7 +80,10 @@
             font-size: 28px;
 
             letter-spacing: 1px;
+
+            text-align: center;
         }
+
 
         .subtitle {
             margin: 5px 0 0;
@@ -106,6 +115,7 @@
                 inset 0 0 30px rgba(0, 0, 0, 0.5);
         }
 
+
         canvas {
             display: block;
 
@@ -127,7 +137,10 @@
 
             display: grid;
 
-            grid-template-columns: 1fr auto 1fr;
+            grid-template-columns:
+                1fr
+                auto
+                1fr;
 
             align-items: center;
 
@@ -136,7 +149,7 @@
 
 
         /* ==================================================
-           CONTROLES ESQUERDA / DIREITA
+           GRUPOS ESQUERDO / DIREITO
         ================================================== */
 
         .control-group {
@@ -147,9 +160,11 @@
             gap: 10px;
         }
 
+
         .control-group.left {
             justify-content: flex-start;
         }
+
 
         .control-group.right {
             justify-content: flex-end;
@@ -161,6 +176,7 @@
         ================================================== */
 
         .control-button {
+
             width: 64px;
             height: 64px;
 
@@ -178,12 +194,17 @@
 
             color: white;
 
+            font-family: Arial, Helvetica, sans-serif;
+
             font-size: 30px;
+
+            line-height: 1;
 
             cursor: pointer;
 
             user-select: none;
             -webkit-user-select: none;
+            -webkit-touch-callout: none;
 
             touch-action: none;
 
@@ -195,9 +216,11 @@
                 background 0.1s;
         }
 
+
         .control-button:hover {
             background: #334155;
         }
+
 
         .control-button:active {
             transform: translateY(4px);
@@ -214,6 +237,7 @@
         ================================================== */
 
         .start-button {
+
             width: 82px;
             height: 82px;
 
@@ -231,12 +255,11 @@
 
             color: #7dd3fc;
 
-            font-size: 34px;
-
             cursor: pointer;
 
             user-select: none;
             -webkit-user-select: none;
+            -webkit-touch-callout: none;
 
             touch-action: none;
 
@@ -248,9 +271,11 @@
                 background 0.1s;
         }
 
+
         .start-button:hover {
             background: #334155;
         }
+
 
         .start-button:active {
             transform: translateY(4px);
@@ -263,10 +288,53 @@
 
 
         /* ==================================================
+           ÍCONE POWER
+        ================================================== */
+
+        .power-icon {
+
+            position: relative;
+
+            width: 30px;
+            height: 30px;
+
+            display: block;
+
+            border: 5px solid currentColor;
+
+            border-top-color: transparent;
+
+            border-radius: 50%;
+        }
+
+
+        .power-icon::before {
+
+            content: "";
+
+            position: absolute;
+
+            left: 50%;
+            top: -8px;
+
+            width: 5px;
+            height: 18px;
+
+            transform:
+                translateX(-50%);
+
+            background: currentColor;
+
+            border-radius: 3px;
+        }
+
+
+        /* ==================================================
            RODAPÉ
         ================================================== */
 
         .footer {
+
             width: 100%;
 
             padding-top: 15px;
@@ -291,74 +359,132 @@
         @media (max-width: 650px) {
 
             body {
+
                 align-items: flex-start;
+
             }
 
+
             .container {
-                width: 100%;
+
+                width: 100vw;
 
                 min-height: 100vh;
 
                 padding:
-                    15px
-                    10px
+                    12px
+                    6px
                     20px;
 
                 border-radius: 0;
 
-                gap: 15px;
+                gap: 12px;
+
             }
+
 
             h1 {
+
                 font-size: 24px;
+
             }
+
 
             .subtitle {
+
                 font-size: 12px;
+
             }
+
+
+            /* ----------------------------------------------
+               CANVAS MAIOR
+            ---------------------------------------------- */
 
             .canvas-container {
-                width: 100%;
 
-                padding: 8px;
+                width: 98vw;
+
+                padding: 6px;
+
             }
+
 
             canvas {
+
                 width: 100%;
+
                 height: auto;
+
             }
 
 
-            /* Controles ocupam toda a largura */
+            /* ----------------------------------------------
+               CONTROLES
+            ---------------------------------------------- */
 
             .control-panel {
-                width: 100%;
+
+                width: 98vw;
 
                 column-gap: 8px;
+
             }
 
 
             .control-group {
+
                 gap: 6px;
+
             }
+
 
             .control-button {
-                width: 58px;
-                height: 58px;
 
-                font-size: 26px;
+                width: 62px;
+
+                height: 62px;
+
+                font-size: 27px;
+
             }
+
 
             .start-button {
-                width: 72px;
-                height: 72px;
 
-                font-size: 30px;
+                width: 74px;
+
+                height: 74px;
+
             }
+
+
+            .power-icon {
+
+                width: 27px;
+
+                height: 27px;
+
+                border-width: 4px;
+
+            }
+
+
+            .power-icon::before {
+
+                width: 4px;
+
+                height: 16px;
+
+            }
+
 
             .footer {
+
                 font-size: 11px;
+
             }
+
         }
 
 
@@ -369,27 +495,60 @@
         @media (max-width: 400px) {
 
             .container {
-                padding-left: 6px;
-                padding-right: 6px;
+
+                padding-left: 4px;
+
+                padding-right: 4px;
+
             }
+
 
             .control-group {
+
                 gap: 4px;
+
             }
+
 
             .control-button {
-                width: 52px;
-                height: 52px;
 
-                font-size: 23px;
+                width: 54px;
+
+                height: 54px;
+
+                font-size: 24px;
+
             }
+
 
             .start-button {
-                width: 64px;
-                height: 64px;
 
-                font-size: 27px;
+                width: 66px;
+
+                height: 66px;
+
             }
+
+
+            .power-icon {
+
+                width: 25px;
+
+                height: 25px;
+
+                border-width: 4px;
+
+            }
+
+
+            .power-icon::before {
+
+                width: 4px;
+
+                height: 15px;
+
+            }
+
         }
 
     </style>
@@ -398,6 +557,7 @@
 
 
 <body>
+
 
     <div class="container">
 
@@ -447,13 +607,16 @@
 
                 <button
                     id="btnLeft"
-                    class="control-button">
+                    class="control-button"
+                    aria-label="Mover para esquerda">
                     ←
                 </button>
 
+
                 <button
                     id="btnDown"
-                    class="control-button">
+                    class="control-button"
+                    aria-label="Mover para baixo">
                     ↓
                 </button>
 
@@ -466,8 +629,11 @@
 
             <button
                 id="btnStart"
-                class="start-button">
-                ⏻
+                class="start-button"
+                aria-label="Ligar ou desligar helicóptero">
+
+                <span class="power-icon"></span>
+
             </button>
 
 
@@ -479,13 +645,16 @@
 
                 <button
                     id="btnUp"
-                    class="control-button">
+                    class="control-button"
+                    aria-label="Mover para cima">
                     ↑
                 </button>
 
+
                 <button
                     id="btnRight"
-                    class="control-button">
+                    class="control-button"
+                    aria-label="Mover para direita">
                     →
                 </button>
 
@@ -503,7 +672,7 @@
             <strong>WebGL 2.0</strong><br>
 
             Use as setas para controlar o helicóptero
-            e ⏻ para ligar ou desligar.
+            e o botão central para ligar ou desligar.
 
         </div>
 
@@ -515,11 +684,17 @@
     ================================================== -->
 
     <script src="m4.js"></script>
+
     <script src="helicopterGeometry.js"></script>
+
     <script src="renderer.js"></script>
+
     <script src="sceneObject.js"></script>
+
     <script src="scene.js"></script>
+
     <script src="main.js"></script>
+
 
 </body>
 
