@@ -55,15 +55,20 @@ body {
 
 .container {
 
-    width: min(100%, 720px);
+    /*
+       No desktop o container acompanha o canvas.
+       660px = 600px de canvas + 30px de cada lado.
+    */
+
+    width: min(660px, 100vw);
 
     display: flex;
     flex-direction: column;
     align-items: center;
 
-    gap: 20px;
+    gap: 14px;
 
-    padding: 30px;
+    padding: 20px;
 
     background:
         rgba(255, 255, 255, 0.06);
@@ -114,9 +119,27 @@ h1 {
 
 .canvas-container {
 
-    width: 100%;
+    /*
+       O canvas pode ter no máximo 600px.
+
+       Quando a janela do notebook fica baixa,
+       ele diminui proporcionalmente para caber
+       na altura disponível.
+
+       220px reserva espaço aproximado para:
+       título + controles + rodapé + espaçamentos.
+    */
+
+    width:
+        min(
+            630px,
+            calc(100vh - 220px)
+        );
+
+    aspect-ratio: 1 / 1;
 
     display: flex;
+
     justify-content: center;
     align-items: center;
 
@@ -137,10 +160,19 @@ canvas {
 
     display: block;
 
+    /*
+       A resolução interna continua 600x600
+       no HTML.
+
+       Aqui estamos apenas controlando
+       o tamanho de apresentação.
+    */
+
     width: 600px;
     height: 600px;
 
     max-width: 100%;
+    max-height: 100%;
 
     aspect-ratio: 1 / 1;
 
@@ -211,6 +243,7 @@ canvas {
     height: 64px;
 
     display: flex;
+
     justify-content: center;
     align-items: center;
 
@@ -280,10 +313,11 @@ canvas {
 
 .start-button {
 
-    width: 82px;
-    height: 82px;
+    width: 76px;
+    height: 76px;
 
     display: flex;
+
     justify-content: center;
     align-items: center;
 
@@ -391,7 +425,7 @@ canvas {
 
     width: 100%;
 
-    padding-top: 15px;
+    padding-top: 10px;
 
     border-top:
         1px solid
@@ -469,7 +503,14 @@ canvas {
 
     .canvas-container {
 
+        /*
+           No celular a largura é que determina
+           o tamanho do canvas.
+        */
+
         width: 100vw;
+
+        aspect-ratio: 1 / 1;
 
         padding: 4px;
 
@@ -481,13 +522,12 @@ canvas {
 
     canvas {
 
-        display: block;
-
         width: 100%;
 
-        max-width: none;
+        height: 100%;
 
-        height: auto;
+        max-width: none;
+        max-height: none;
 
         aspect-ratio: 1 / 1;
 
@@ -502,8 +542,6 @@ canvas {
     .control-panel {
 
         width: 100%;
-
-        display: grid;
 
         grid-template-columns:
             1fr
@@ -524,22 +562,19 @@ canvas {
     }
 
 
+    /*
+       Mesmo tamanho usado no desktop.
+    */
+
     .control-button {
 
         width: 64px;
 
         height: 64px;
 
-        font-size: 28px;
+        font-size: 30px;
 
         touch-action: none;
-
-        user-select: none;
-        -webkit-user-select: none;
-        -webkit-touch-callout: none;
-
-        -webkit-tap-highlight-color:
-            transparent;
     }
 
 
@@ -550,31 +585,24 @@ canvas {
         height: 76px;
 
         touch-action: none;
-
-        user-select: none;
-        -webkit-user-select: none;
-        -webkit-touch-callout: none;
-
-        -webkit-tap-highlight-color:
-            transparent;
     }
 
 
     .power-icon {
 
-        width: 28px;
+        width: 30px;
 
-        height: 28px;
+        height: 30px;
 
-        border-width: 4px;
+        border-width: 5px;
     }
 
 
     .power-icon::before {
 
-        width: 4px;
+        width: 5px;
 
-        height: 17px;
+        height: 18px;
     }
 
 
@@ -619,20 +647,25 @@ canvas {
     }
 
 
+    /*
+       Redução apenas para celulares
+       muito estreitos.
+    */
+
     .control-button {
 
-        width: 56px;
+        width: 60px;
 
-        height: 56px;
+        height: 60px;
 
-        font-size: 24px;
+        font-size: 28px;
     }
 
 
     .start-button {
 
-        width: 68px;
+        width: 72px;
 
-        height: 68px;
+        height: 72px;
     }
 }
