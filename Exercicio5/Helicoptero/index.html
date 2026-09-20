@@ -5,38 +5,36 @@
 
     <meta charset="UTF-8">
 
+    <!--
+        Fundamental para que o celular utilize
+        a largura real da tela.
+    -->
     <meta name="viewport"
-          content="width=device-width,
-                   initial-scale=1.0,
-                   maximum-scale=1.0,
-                   user-scalable=no">
+          content="width=device-width, initial-scale=1.0">
 
     <title>Helicóptero</title>
 
-    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet"
+          href="style.css">
 
 </head>
 
 
-<body>
-
+<body oncontextmenu="return false;">
 
     <div class="container">
-
 
         <!-- ==================================================
              TÍTULO
         ================================================== -->
 
-        <div>
+        <h1>
+            Helicóptero
+        </h1>
 
-            <h1>Helicopter</h1>
-
-            <p class="subtitle">
-                Controle de helicóptero em WebGL 2.0
-            </p>
-
-        </div>
+        <p class="subtitle">
+            Controle de helicóptero em WebGL 2.0
+        </p>
 
 
         <!-- ==================================================
@@ -45,10 +43,23 @@
 
         <div class="canvas-container">
 
+            <!--
+
+                IMPORTANTE:
+
+                A resolução interna continua sendo
+                exatamente 600 x 600 pixels.
+
+                O CSS controla somente a apresentação
+                visual do canvas na tela.
+
+            -->
+
             <canvas
                 id="canvas"
                 width="600"
-                height="600">
+                height="600"
+                oncontextmenu="return false;">
             </canvas>
 
         </div>
@@ -61,7 +72,9 @@
         <div class="control-panel">
 
 
-            <!-- POLEGAR ESQUERDO -->
+            <!-- ==================================================
+                 CONTROLES ESQUERDOS
+            ================================================== -->
 
             <div class="control-group left">
 
@@ -69,7 +82,8 @@
                     id="btnLeft"
                     class="control-button"
                     type="button"
-                    aria-label="Mover para esquerda">
+                    aria-label="Mover para esquerda"
+                    oncontextmenu="return false;">
 
                     ←
 
@@ -80,7 +94,8 @@
                     id="btnDown"
                     class="control-button"
                     type="button"
-                    aria-label="Mover para baixo">
+                    aria-label="Mover para baixo"
+                    oncontextmenu="return false;">
 
                     ↓
 
@@ -89,20 +104,25 @@
             </div>
 
 
-            <!-- BOTÃO CENTRAL -->
+            <!-- ==================================================
+                 BOTÃO LIGAR / DESLIGAR
+            ================================================== -->
 
             <button
                 id="btnStart"
                 class="start-button"
                 type="button"
-                aria-label="Ligar ou desligar helicóptero">
+                aria-label="Ligar ou desligar helicóptero"
+                oncontextmenu="return false;">
 
                 <span class="power-icon"></span>
 
             </button>
 
 
-            <!-- POLEGAR DIREITO -->
+            <!-- ==================================================
+                 CONTROLES DIREITOS
+            ================================================== -->
 
             <div class="control-group right">
 
@@ -110,7 +130,8 @@
                     id="btnUp"
                     class="control-button"
                     type="button"
-                    aria-label="Mover para cima">
+                    aria-label="Mover para cima"
+                    oncontextmenu="return false;">
 
                     ↑
 
@@ -121,7 +142,8 @@
                     id="btnRight"
                     class="control-button"
                     type="button"
-                    aria-label="Mover para direita">
+                    aria-label="Mover para direita"
+                    oncontextmenu="return false;">
 
                     →
 
@@ -138,7 +160,9 @@
 
         <div class="footer">
 
-            <strong>WebGL 2.0</strong><br>
+            <strong>WebGL 2.0</strong>
+
+            <br>
 
             Use as setas para controlar o helicóptero
             e o botão central para ligar ou desligar.
@@ -153,10 +177,15 @@
     ================================================== -->
 
     <script src="m4.js"></script>
+
     <script src="helicopterGeometry.js"></script>
+
     <script src="renderer.js"></script>
+
     <script src="sceneObject.js"></script>
+
     <script src="scene.js"></script>
+
     <script src="main.js"></script>
 
 </body>
