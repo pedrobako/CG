@@ -58,11 +58,6 @@ body {
 
     width: min(660px, 100vw);
 
-    /*
-       Ocupa a altura disponível da janela,
-       sem ultrapassá-la.
-    */
-
     max-height: 100dvh;
 
     display: flex;
@@ -117,21 +112,20 @@ h1 {
 
 
 /* ==================================================
-   CANVAS
+   CANVAS - DESKTOP
 ================================================== */
 
 .canvas-container {
 
     /*
-       IMPORTANTE:
-
-       O tamanho abaixo é APENAS o tamanho visual.
-
-       O canvas continua tendo 600x600 pixels
-       internamente.
-       
        No notebook:
-       altura da janela determina o tamanho.
+
+       o canvas visual pode chegar a 600px,
+       mas diminui proporcionalmente se a
+       altura da janela não comportar tudo.
+
+       O canvas continua sendo 600x600
+       internamente.
     */
 
     width:
@@ -168,17 +162,20 @@ h1 {
 
 canvas {
 
-    /*
-       A resolução REAL permanece 600x600.
+    display: block;
 
-       O CSS apenas redimensiona visualmente
-       o canvas de forma proporcional.
+    /*
+       IMPORTANTE:
+
+       width e height aqui são somente
+       o tamanho de apresentação.
+
+       O buffer WebGL continua sendo
+       600 x 600.
     */
 
     width: 100%;
     height: 100%;
-
-    display: block;
 
     aspect-ratio: 1 / 1;
 
@@ -470,6 +467,10 @@ canvas {
     }
 
 
+    /* ==================================================
+       CONTAINER DO CELULAR
+    ================================================== */
+
     .container {
 
         width: 100vw;
@@ -516,24 +517,29 @@ canvas {
 
     /* ==================================================
        CANVAS NO CELULAR
-       
-       AQUI A LARGURA DETERMINA
-       O TAMANHO VISUAL.
     ================================================== */
 
     .canvas-container {
 
-        width:
-            min(
-                600px,
-                calc(100vw - 10px)
-            );
+        /*
+           AQUI ESTÁ A MUDANÇA PRINCIPAL.
 
-        height:
-            min(
-                600px,
-                calc(100vw - 10px)
-            );
+           O canvas-container passa a ocupar
+           TODA A LARGURA DISPONÍVEL do container.
+
+           Não usamos mais:
+           
+           min(600px, ...)
+           
+           porque queremos que a largura
+           da área determine o zoom visual.
+        */
+
+        width: 100%;
+
+        height: auto;
+
+        aspect-ratio: 1 / 1;
 
         padding: 4px;
 
@@ -547,8 +553,15 @@ canvas {
 
     canvas {
 
+        /*
+           Ocupa toda a área disponível.
+
+           A proporção continua 1:1.
+        */
+
         width: 100%;
-        height: 100%;
+
+        height: auto;
 
         max-width: none;
         max-height: none;
@@ -560,9 +573,7 @@ canvas {
 
 
     /* ==================================================
-       CONTROLES NO CELULAR
-       
-       MESMO TAMANHO DO NOTEBOOK.
+       CONTROLES
     ================================================== */
 
     .control-panel {
@@ -655,11 +666,11 @@ canvas {
 
     .canvas-container {
 
-        width:
-            calc(100vw - 6px);
+        /*
+           Continua ocupando toda a largura.
+        */
 
-        height:
-            calc(100vw - 6px);
+        width: 100%;
     }
 
 
@@ -674,12 +685,6 @@ canvas {
         gap: 3px;
     }
 
-
-    /*
-       Pequena redução somente para telas
-       muito estreitas, para os quatro botões
-       continuarem cabendo confortavelmente.
-    */
 
     .control-button {
 
