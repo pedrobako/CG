@@ -14,15 +14,16 @@ body {
     padding: 0;
 
     width: 100%;
-    min-height: 100%;
+    height: 100%;
 
-    overflow-x: hidden;
+    overflow: hidden;
 }
 
 
 body {
 
     min-height: 100vh;
+    min-height: 100dvh;
 
     display: flex;
     justify-content: center;
@@ -55,20 +56,22 @@ body {
 
 .container {
 
+    width: min(660px, 100vw);
+
     /*
-       No desktop o container acompanha o canvas.
-       660px = 600px de canvas + 30px de cada lado.
+       Ocupa a altura disponível da janela,
+       sem ultrapassá-la.
     */
 
-    width: min(660px, 100vw);
+    max-height: 100dvh;
 
     display: flex;
     flex-direction: column;
     align-items: center;
 
-    gap: 14px;
+    gap: 10px;
 
-    padding: 20px;
+    padding: 12px 20px;
 
     background:
         rgba(255, 255, 255, 0.06);
@@ -103,7 +106,7 @@ h1 {
 
 .subtitle {
 
-    margin: 5px 0 0;
+    margin: 3px 0 0;
 
     color: #aeb9c9;
 
@@ -120,30 +123,37 @@ h1 {
 .canvas-container {
 
     /*
-       O canvas pode ter no máximo 600px.
+       IMPORTANTE:
 
-       Quando a janela do notebook fica baixa,
-       ele diminui proporcionalmente para caber
-       na altura disponível.
+       O tamanho abaixo é APENAS o tamanho visual.
 
-       220px reserva espaço aproximado para:
-       título + controles + rodapé + espaçamentos.
+       O canvas continua tendo 600x600 pixels
+       internamente.
+       
+       No notebook:
+       altura da janela determina o tamanho.
     */
 
     width:
         min(
-            630px,
-            calc(100vh - 220px)
+            600px,
+            calc(100dvh - 230px)
         );
 
-    aspect-ratio: 1 / 1;
+    height:
+        min(
+            600px,
+            calc(100dvh - 230px)
+        );
+
+    flex-shrink: 1;
 
     display: flex;
 
     justify-content: center;
     align-items: center;
 
-    padding: 15px;
+    padding: 10px;
 
     background: #080c14;
 
@@ -158,21 +168,17 @@ h1 {
 
 canvas {
 
-    display: block;
-
     /*
-       A resolução interna continua 600x600
-       no HTML.
+       A resolução REAL permanece 600x600.
 
-       Aqui estamos apenas controlando
-       o tamanho de apresentação.
+       O CSS apenas redimensiona visualmente
+       o canvas de forma proporcional.
     */
 
-    width: 600px;
-    height: 600px;
+    width: 100%;
+    height: 100%;
 
-    max-width: 100%;
-    max-height: 100%;
+    display: block;
 
     aspect-ratio: 1 / 1;
 
@@ -200,6 +206,8 @@ canvas {
     align-items: center;
 
     column-gap: 25px;
+
+    flex-shrink: 0;
 
     touch-action: none;
 }
@@ -239,8 +247,8 @@ canvas {
 
 .control-button {
 
-    width: 64px;
-    height: 64px;
+    width: 74px;
+    height: 74px;
 
     display: flex;
 
@@ -263,7 +271,7 @@ canvas {
         Helvetica,
         sans-serif;
 
-    font-size: 30px;
+    font-size: 32px;
 
     line-height: 1;
 
@@ -313,8 +321,8 @@ canvas {
 
 .start-button {
 
-    width: 76px;
-    height: 76px;
+    width: 86px;
+    height: 86px;
 
     display: flex;
 
@@ -380,8 +388,8 @@ canvas {
 
     position: relative;
 
-    width: 30px;
-    height: 30px;
+    width: 32px;
+    height: 32px;
 
     display: block;
 
@@ -405,7 +413,7 @@ canvas {
     top: -8px;
 
     width: 5px;
-    height: 18px;
+    height: 19px;
 
     transform:
         translateX(-50%);
@@ -425,7 +433,7 @@ canvas {
 
     width: 100%;
 
-    padding-top: 10px;
+    padding-top: 7px;
 
     border-top:
         1px solid
@@ -433,16 +441,18 @@ canvas {
 
     color: #64748b;
 
-    font-size: 12px;
+    font-size: 11px;
 
-    line-height: 1.5;
+    line-height: 1.4;
 
     text-align: center;
+
+    flex-shrink: 0;
 }
 
 
 /* ==================================================
-   DISPOSITIVOS TOUCH
+   CELULAR / TOUCH
 ================================================== */
 
 @media (hover: none) and (pointer: coarse) {
@@ -456,6 +466,7 @@ canvas {
         min-height: 100dvh;
 
         overflow-x: hidden;
+        overflow-y: auto;
     }
 
 
@@ -466,6 +477,8 @@ canvas {
         max-width: none;
 
         min-height: 100dvh;
+
+        max-height: none;
 
         padding:
             10px
@@ -485,6 +498,10 @@ canvas {
     }
 
 
+    /* ==================================================
+       TÍTULO
+    ================================================== */
+
     h1 {
 
         font-size: 23px;
@@ -499,22 +516,30 @@ canvas {
 
     /* ==================================================
        CANVAS NO CELULAR
+       
+       AQUI A LARGURA DETERMINA
+       O TAMANHO VISUAL.
     ================================================== */
 
     .canvas-container {
 
-        /*
-           No celular a largura é que determina
-           o tamanho do canvas.
-        */
+        width:
+            min(
+                600px,
+                calc(100vw - 10px)
+            );
 
-        width: 100vw;
-
-        aspect-ratio: 1 / 1;
+        height:
+            min(
+                600px,
+                calc(100vw - 10px)
+            );
 
         padding: 4px;
 
         border-radius: 10px;
+
+        flex-shrink: 0;
 
         touch-action: none;
     }
@@ -523,7 +548,6 @@ canvas {
     canvas {
 
         width: 100%;
-
         height: 100%;
 
         max-width: none;
@@ -537,6 +561,8 @@ canvas {
 
     /* ==================================================
        CONTROLES NO CELULAR
+       
+       MESMO TAMANHO DO NOTEBOOK.
     ================================================== */
 
     .control-panel {
@@ -550,6 +576,8 @@ canvas {
 
         column-gap: 5px;
 
+        flex-shrink: 0;
+
         touch-action: none;
     }
 
@@ -562,17 +590,13 @@ canvas {
     }
 
 
-    /*
-       Mesmo tamanho usado no desktop.
-    */
-
     .control-button {
 
-        width: 64px;
+        width: 74px;
 
-        height: 64px;
+        height: 74px;
 
-        font-size: 30px;
+        font-size: 32px;
 
         touch-action: none;
     }
@@ -580,9 +604,9 @@ canvas {
 
     .start-button {
 
-        width: 76px;
+        width: 86px;
 
-        height: 76px;
+        height: 86px;
 
         touch-action: none;
     }
@@ -590,9 +614,9 @@ canvas {
 
     .power-icon {
 
-        width: 30px;
+        width: 32px;
 
-        height: 30px;
+        height: 32px;
 
         border-width: 5px;
     }
@@ -602,7 +626,7 @@ canvas {
 
         width: 5px;
 
-        height: 18px;
+        height: 19px;
     }
 
 
@@ -616,22 +640,26 @@ canvas {
 
 
 /* ==================================================
-   CELULAR PEQUENO
+   CELULAR MUITO ESTREITO
 ================================================== */
 
 @media (max-width: 380px) {
 
     .container {
 
-        padding-left: 5px;
+        padding-left: 3px;
 
-        padding-right: 5px;
+        padding-right: 3px;
     }
 
 
     .canvas-container {
 
-        width: 100vw;
+        width:
+            calc(100vw - 6px);
+
+        height:
+            calc(100vw - 6px);
     }
 
 
@@ -648,24 +676,25 @@ canvas {
 
 
     /*
-       Redução apenas para celulares
-       muito estreitos.
+       Pequena redução somente para telas
+       muito estreitas, para os quatro botões
+       continuarem cabendo confortavelmente.
     */
 
     .control-button {
 
-        width: 60px;
+        width: 68px;
 
-        height: 60px;
+        height: 68px;
 
-        font-size: 28px;
+        font-size: 30px;
     }
 
 
     .start-button {
 
-        width: 72px;
+        width: 80px;
 
-        height: 72px;
+        height: 80px;
     }
 }
