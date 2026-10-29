@@ -9,70 +9,59 @@ class Scene {
         this.renderer =
             new Renderer(gl, program);
 
-        this.helicopters = [];
+        this.carroJogador = new EnduroCar(0, -7.0, 0);
+        this.raceTrack = new RaceTrack();
+        this.sky = new Sky();
 
-        const numberOfHelicopters = 10;
+        //DEFININDO A POSIÇÃO DA CÂMERA
+        const P0 = [0, 5, 15]; // Ponto de observação (onde está a câmera)
+        const Pref = [0, 0, 0]; // Ponto de referência (pra onde ela olha)
+        const V = [0, 1, 0];    // Vetor "up" (direção "pra cima" da câmera)
 
-        for (let i = 0; i < numberOfHelicopters; i++) {
-
-            const tx = Math.random() * 8.0 - 4.0;
-            const ty = Math.random() * 6.0 - 3.0;
-            const tz = Math.random() * 15.0 - 10.0;
-
-            const helicopter = new Helicopter(tx, ty, tz);
-
-            this.helicopters.push(helicopter);
-        }
-
-        const P0 = [6, 5, 10]; // Ponto de observação
-        const Pref = [0, 0, 0]; // Ponto de referência
-        const V = [0, 1, 0];    // Vetor "up"
         this.viewTransform = m4.setViewingMatrix(
             P0,    // Ponto de observação (P0)
             Pref,  // Ponto de referência (Pref)
             V      // Vetor "up" (V)
         );
 
-    /*
-        this.projectionTransform = m4.setOrthographicProjectionMatrix(
-            -1, 1,   // left, right
-            -1, 1,   // bottom, top
-            -5, -100 // near, far
-        );
-    */
-    
-    /*
-        this.projectionTransform = m4.setPerspectiveProjectionMatrix(
-            -1, 1,   // left, right
-            -1, 1,   // bottom, top
-            -5, -100 // near, far
-        );
-    */
+        /*
+            this.projectionTransform = m4.setOrthographicProjectionMatrix(
+                -1, 1,   // left, right
+                -1, 1,   // bottom, top
+                -5, -100 // near, far
+            );
+        */
 
-	
-        const fov = 30 * Math.PI / 180;
+        /*
+            this.projectionTransform = m4.setPerspectiveProjectionMatrix(
+                -1, 1,   // left, right
+                -1, 1,   // bottom, top
+                -5, -100 // near, far
+            );
+        */
+
+
+        const fov = 60 * Math.PI / 180;
         const aspect = canvas.width / canvas.height;
         const near = -5;
         const far = -100;
 
-        this.projectionTransform = m4.setPerspectiveProjectionMatrixAngle(
-                fov, aspect, near, far
-        );
-    
+        this.projectionTransform =
+            m4.setPerspectiveProjectionMatrixAngle(fov,
+                aspect,
+                near,
+                far);
+
         this.lightPositions = [
-            [ 4.0, 4.0,  5.0],
-            [ 4.0, -4.0,  5.0]
+            [4.0, 4.0, 5.0],
+            [4.0, -4.0, 5.0]
         ];
 
         this.viewPosition = P0;
     }
 
     update() {
-
-        for (const helicopter of this.helicopters) {
-            helicopter.update();
-        }
-
+        this.carroJogador.update();
     }
 
     draw() {
@@ -83,17 +72,30 @@ class Scene {
         );
 
         gl.useProgram(program);
+        this.carroJogador.draw(
+            this.renderer,
+            this.viewTransform,
+            this.projectionTransform,
+            this.lightPositions,
+            this.viewPosition
+        );
 
-        for (const helicopter of this.helicopters) {
+        // Desenhar as linhas laterais da pista
+        this.raceTrack.draw(
+            this.renderer,
+            this.viewTransform,
+            this.projectionTransform,
+            this.lightPositions,
+            this.viewPosition
+        );
 
-            helicopter.draw(
-                this.renderer,
-                this.viewTransform,
-                this.projectionTransform,
-                this.lightPositions,
-                this.viewPosition
-            );
-        }
+        this.sky.draw(
+            this.renderer,
+            this.viewTransform,
+            this.projectionTransform,
+            this.lightPositions,
+            this.viewPosition
+        );
     }
 
     execute() {

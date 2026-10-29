@@ -218,12 +218,7 @@ const program =
 // CONFIGURAÇÃO INICIAL DO WEBGL
 // ==================================================
 
-gl.clearColor(
-    0.1,
-    0.1,
-    0.1,
-    1.0
-);
+gl.clearColor(0.0, 100 / 255, 0.0, 1.0);
 
 gl.viewport(
     0,
@@ -236,16 +231,35 @@ gl.enable(
     gl.DEPTH_TEST
 );
 
-// ==================================================
-// CRIAR CENA
-// ==================================================
-
-const scene =
-    new Scene(gl,program);
-
+// ================================================================
+// CRIAR CARREGAR OS MODELOS GLB, CRIAR A CENA E INICIAR A ANIMAÇÃO
+// ================================================================
 
 // ==================================================
-// INICIAR ANIMAÇÃO
+// CARREGAR E TESTAR UMA PEÇA DO MODELO GLB
 // ==================================================
 
-scene.init();
+const gltfLoader = new GLTFLoader();
+let carPiece = null;
+
+gltfLoader.load("models/enduroCar.glb")
+    .then(resultado => {
+        const primitive = gltfLoader.getMeshPrimitive(
+            resultado.gltf,
+            resultado.binary,
+            0
+        );
+
+        carPiece = gltfLoader.createCarGeometry(
+            resultado.gltf,
+            resultado.binary
+        );
+
+        // Criar e iniciar a cena normalmente.
+        const scene = new Scene(gl, program);
+        scene.init();
+
+    })
+    .catch(erro => {
+        console.error("Erro ao carregar ou processar o GLB:", erro);
+    });

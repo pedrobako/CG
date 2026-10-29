@@ -1,5 +1,5 @@
 var m4 = {
-  identity: function() {
+  identity: function () {
     return [
       1, 0, 0, 0,
       0, 1, 0, 0,
@@ -8,16 +8,16 @@ var m4 = {
     ];
   },
 
-  transpose: function(m) {
+  transpose: function (m) {
     return [
-      m[0], m[4], m[8],  m[12],
-      m[1], m[5], m[9],  m[13],
+      m[0], m[4], m[8], m[12],
+      m[1], m[5], m[9], m[13],
       m[2], m[6], m[10], m[14],
       m[3], m[7], m[11], m[15],
     ];
   },
 
-  multiply: function(a, b) {
+  multiply: function (a, b) {
     var a00 = a[0 * 4 + 0];
     var a01 = a[1 * 4 + 0];
     var a02 = a[2 * 4 + 0];
@@ -70,105 +70,156 @@ var m4 = {
     ];
   },
 
-  translation: function(tx, ty, tz) {
+  transformPoint: function (matrix, point) {
+    const x = point[0];
+    const y = point[1];
+    const z = point[2];
+
     return [
-        1,  0,  0,  0,
-        0,  1,  0,  0,
-        0,  0,  1,  0,
-        tx, ty, tz, 1,
+      matrix[0] * x + matrix[4] * y + matrix[8] * z + matrix[12],
+      matrix[1] * x + matrix[5] * y + matrix[9] * z + matrix[13],
+      matrix[2] * x + matrix[6] * y + matrix[10] * z + matrix[14]
     ];
   },
 
-  xRotation: function(angleInRadians) {
+  translation: function (tx, ty, tz) {
+    return [
+      1, 0, 0, 0,
+      0, 1, 0, 0,
+      0, 0, 1, 0,
+      tx, ty, tz, 1,
+    ];
+  },
+
+  xRotation: function (angleInRadians) {
     var c = Math.cos(angleInRadians);
     var s = Math.sin(angleInRadians);
 
     return [
-      1,  0, 0, 0,
-      0,  c, s, 0,
+      1, 0, 0, 0,
+      0, c, s, 0,
       0, -s, c, 0,
-      0,  0, 0, 1,
+      0, 0, 0, 1,
     ];
   },
 
-  yRotation: function(angleInRadians) {
+  yRotation: function (angleInRadians) {
     var c = Math.cos(angleInRadians);
     var s = Math.sin(angleInRadians);
 
     return [
       c, 0, -s, 0,
-      0, 1,  0, 0,
-      s, 0,  c, 0,
-      0, 0,  0, 1,
+      0, 1, 0, 0,
+      s, 0, c, 0,
+      0, 0, 0, 1,
     ];
   },
 
-  zRotation: function(angleInRadians) {
+  zRotation: function (angleInRadians) {
     var c = Math.cos(angleInRadians);
     var s = Math.sin(angleInRadians);
 
     return [
-        c, s, 0, 0,
-       -s, c, 0, 0,
-        0, 0, 1, 0,
-        0, 0, 0, 1,
+      c, s, 0, 0,
+      -s, c, 0, 0,
+      0, 0, 1, 0,
+      0, 0, 0, 1,
     ];
   },
 
-  scaling: function(sx, sy, sz) {
+  scaling: function (sx, sy, sz) {
     return [
-      sx, 0,  0,  0,
-      0, sy,  0,  0,
-      0,  0, sz,  0,
-      0,  0,  0,  1,
+      sx, 0, 0, 0,
+      0, sy, 0, 0,
+      0, 0, sz, 0,
+      0, 0, 0, 1,
     ];
   },
 
-  translate: function(m, tx, ty, tz) {
-    return m4.multiply(m4.translation(tx, ty, tz),m);
+  translate: function (m, tx, ty, tz) {
+    return m4.multiply(m4.translation(tx, ty, tz), m);
   },
 
-  xRotate: function(m, angleInRadians) {
-    return m4.multiply(m4.xRotation(angleInRadians),m);
+  xRotate: function (m, angleInRadians) {
+    return m4.multiply(m4.xRotation(angleInRadians), m);
   },
 
-  yRotate: function(m, angleInRadians) {
-    return m4.multiply(m4.yRotation(angleInRadians),m);
+  yRotate: function (m, angleInRadians) {
+    return m4.multiply(m4.yRotation(angleInRadians), m);
   },
 
-  zRotate: function(m, angleInRadians) {
-    return m4.multiply(m4.zRotation(angleInRadians),m);
+  zRotate: function (m, angleInRadians) {
+    return m4.multiply(m4.zRotation(angleInRadians), m);
   },
 
-  scale: function(m, sx, sy, sz) {
-    return m4.multiply(m4.scaling(sx, sy, sz),m);
+  scale: function (m, sx, sy, sz) {
+    return m4.multiply(m4.scaling(sx, sy, sz), m);
   },
 
-  unitVector: function(v){ 
+  unitVector: function (v) {
     let vModulus = m4.vectorModulus(v);
-    return v.map(function(x) { return x/vModulus; });
+    return v.map(function (x) { return x / vModulus; });
   },
 
-  vectorModulus: function(v){
-    return Math.sqrt(Math.pow(v[0],2)+Math.pow(v[1],2)+Math.pow(v[2],2));
+  vectorModulus: function (v) {
+    return Math.sqrt(Math.pow(v[0], 2) + Math.pow(v[1], 2) + Math.pow(v[2], 2));
   },
 
-  crossProduct: function(v1,v2){
+  crossProduct: function (v1, v2) {
     let result = [
-        v1[1]*v2[2] - v1[2]*v2[1],
-        v1[2]*v2[0] - v1[0]*v2[2],
-        v1[0]*v2[1] - v1[1]*v2[0]
+      v1[1] * v2[2] - v1[2] * v2[1],
+      v1[2] * v2[0] - v1[0] * v2[2],
+      v1[0] * v2[1] - v1[1] * v2[0]
     ];
     return result;
   },
 
-  setViewingMatrix: function(P0,Pref,V){
-    let N = [P0[0]-Pref[0],P0[1]-Pref[1],P0[2]-Pref[2]];
-    let n = m4.unitVector(N);
-    let u = m4.unitVector(m4.crossProduct(V,n));
-    let v = m4.crossProduct(n,u);
+  //Adapta os dados da rotação do modelo Blender para a rotação do projeto
+  quaternionToRotationMatrix: function (q) {
+    const x = q[0];
+    const y = q[1];
+    const z = q[2];
+    const w = q[3];
 
-    let translationMatrix = m4.translation(-P0[0],-P0[1],-P0[2]);
+    const x2 = x * x;
+    const y2 = y * y;
+    const z2 = z * z;
+
+    const xy = x * y;
+    const xz = x * z;
+    const yz = y * z;
+
+    const wx = w * x;
+    const wy = w * y;
+    const wz = w * z;
+
+    return [
+      1 - 2 * (y2 + z2),
+      2 * (xy + wz),
+      2 * (xz - wy),
+      0,
+
+      2 * (xy - wz),
+      1 - 2 * (x2 + z2),
+      2 * (yz + wx),
+      0,
+
+      2 * (xz + wy),
+      2 * (yz - wx),
+      1 - 2 * (x2 + y2),
+      0,
+
+      0, 0, 0, 1
+    ];
+  },
+
+  setViewingMatrix: function (P0, Pref, V) {
+    let N = [P0[0] - Pref[0], P0[1] - Pref[1], P0[2] - Pref[2]];
+    let n = m4.unitVector(N);
+    let u = m4.unitVector(m4.crossProduct(V, n));
+    let v = m4.crossProduct(n, u);
+
+    let translationMatrix = m4.translation(-P0[0], -P0[1], -P0[2]);
     let rotationMatrix = [
       u[0], v[0], n[0], 0,
       u[1], v[1], n[1], 0,
@@ -176,37 +227,37 @@ var m4 = {
       0, 0, 0, 1
     ];
 
-    return m4.multiply(rotationMatrix,translationMatrix);
+    return m4.multiply(rotationMatrix, translationMatrix);
   },
 
-  setOrthographicProjectionMatrix: function(xw_min,xw_max,yw_min,yw_max,z_near,z_far){
+  setOrthographicProjectionMatrix: function (xw_min, xw_max, yw_min, yw_max, z_near, z_far) {
     return [
-      2/(xw_max-xw_min), 0, 0, 0,
-      0, 2/(yw_max-yw_min), 0, 0,
-      0, 0, -2/(z_near-z_far), 0,
-      -(xw_max+xw_min)/(xw_max-xw_min), -(yw_max+yw_min)/(yw_max-yw_min), (z_near+z_far)/(z_near-z_far), 1
+      2 / (xw_max - xw_min), 0, 0, 0,
+      0, 2 / (yw_max - yw_min), 0, 0,
+      0, 0, -2 / (z_near - z_far), 0,
+      -(xw_max + xw_min) / (xw_max - xw_min), -(yw_max + yw_min) / (yw_max - yw_min), (z_near + z_far) / (z_near - z_far), 1
     ];
   },
 
-  setPerspectiveProjectionMatrix: function(xw_min,xw_max,yw_min,yw_max,z_near,z_far){
+  setPerspectiveProjectionMatrix: function (xw_min, xw_max, yw_min, yw_max, z_near, z_far) {
     return [
-      (-2*z_near)/(xw_max-xw_min), 0, 0, 0,
-      0, (-2*z_near)/(yw_max-yw_min), 0, 0,
-      (xw_max+xw_min)/(xw_max-xw_min), (yw_max+yw_min)/(yw_max-yw_min), (z_near+z_far)/(z_near-z_far), -1,
-      0, 0, -(2*z_near*z_far)/(z_near-z_far), 0
+      (-2 * z_near) / (xw_max - xw_min), 0, 0, 0,
+      0, (-2 * z_near) / (yw_max - yw_min), 0, 0,
+      (xw_max + xw_min) / (xw_max - xw_min), (yw_max + yw_min) / (yw_max - yw_min), (z_near + z_far) / (z_near - z_far), -1,
+      0, 0, -(2 * z_near * z_far) / (z_near - z_far), 0
     ];
   },
 
-  setPerspectiveProjectionMatrixAngle: function(fov, aspect, near, far) {
+  setPerspectiveProjectionMatrixAngle: function (fov, aspect, near, far) {
 
     const f = 1.0 / Math.tan(fov / 2);
     const rangeInv = 1.0 / (near - far);
 
     return [
-        f / aspect, 0, 0, 0,
-        0, f, 0, 0,
-        0, 0, (near + far) * rangeInv, -1,
-        0, 0, -2 * near * far * rangeInv, 0
+      f / aspect, 0, 0, 0,
+      0, f, 0, 0,
+      0, 0, (near + far) * rangeInv, -1,
+      0, 0, -2 * near * far * rangeInv, 0
     ];
   }
 
