@@ -25,7 +25,7 @@ class SceneObject {
     }
 }
 
-class EnduroCarObject extends SceneObject {
+/*class EnduroCarObject extends SceneObject {
     constructor() {
         super(
             carPiece.vertices,
@@ -41,9 +41,31 @@ class EnduroCarObject extends SceneObject {
             m4.yRotation(heading)
         );
     }
+}*/
+class EnduroCar extends SceneObject {
+    constructor(tx, ty, tz) {
+        super(
+            carPiece.vertices,
+            carPiece.colors,
+            carPiece.normals,
+            carPiece.indices
+        );
+
+        this.tx = tx;
+        this.ty = ty;
+        this.tz = tz;
+        this.heading = -Math.PI / 2;
+    }
+
+    update() {
+        this.modelTransform = m4.multiply(
+            m4.translation(this.tx, this.ty, this.tz),
+            m4.yRotation(this.heading)
+        );
+    }
 }
 
-class RaceTrackObject extends SceneObject {
+class RaceTrack extends SceneObject {
     constructor() {
         super(
             raceTrackGeometry.vertices,
@@ -51,8 +73,6 @@ class RaceTrackObject extends SceneObject {
             raceTrackGeometry.normals,
             raceTrackGeometry.indices
         );
-
-        this.modelTransform = m4.identity();
     }
 
     update() {
@@ -60,7 +80,7 @@ class RaceTrackObject extends SceneObject {
     }
 }
 
-class SkyObject extends SceneObject {
+class Sky extends SceneObject {
     constructor() {
         super(
             skyGeometry.vertices,
@@ -72,5 +92,7 @@ class SkyObject extends SceneObject {
         this.modelTransform = m4.identity();
     }
 
-    update() {}
+    update() {
+        // O céu é estático; não precisa atualizar sua transformação.
+    }
 }
