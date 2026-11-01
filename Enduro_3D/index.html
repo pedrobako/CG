@@ -2,12 +2,66 @@
 <html lang="pt-BR">
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Enduro 3D</title>
+
+    <link rel="stylesheet" href="./styles.css">
 </head>
 
 <body>
 
-    <canvas id="canvas" width="800" height="600"></canvas>
+    <main class="game-container">
+
+        <section class="game-area">
+            <canvas id="canvas" width="800" height="600"></canvas>
+        </section>
+
+        <aside class="controls-area">
+            <div class="keypad">
+
+                <div class="key">7</div>
+
+                <div class="key" data-key="Numpad8">
+                    8
+                    <span class="key-label">camera up</span>
+                </div>
+
+                <div class="key">9</div>
+
+                <div class="key" data-key="Numpad4">
+                    4
+                    <span class="key-label">camera left</span>
+                </div>
+
+                <div class="key" data-key="Numpad5">
+                    5
+                    <span class="key-label">focus car</span>
+                </div>
+
+                <div class="key" data-key="Numpad6">
+                    6
+                    <span class="key-label">camera right</span>
+                </div>
+
+                <div class="key" data-key="Numpad1">
+                    1
+                    <span class="key-label">1st person</span>
+                </div>
+
+                <div class="key" data-key="Numpad2">
+                    2
+                    <span class="key-label">camera down</span>
+                </div>
+
+                <div class="key" data-key="Numpad3">
+                    3
+                    <span class="key-label">3rd person</span>
+                </div>
+
+            </div>
+        </aside>
+
+    </main>
 
     <script src="m4.js"></script>
     <script src="addNormalsToGeometry.js"></script>

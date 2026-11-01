@@ -5,11 +5,11 @@ function raceTrackVertices() {
     // Largura da pista: 10 unidades.
     // Espessura das linhas: 0.08 unidade.
     // Comprimento: 100 unidades.
-    const TrackWidth = 4.0;
-    const halfTrackWidth = TrackWidth/2;
+    const trackWidth = 4.0;
+    const halfTrackWidth = trackWidth/2;
     const lineWidth = 0.08;
-    const Length = 100.0;
-    const halfLength = 50.0;
+    const length = 200.0;
+    const halfLength = length/2;
     const y = 0.02;
 
     const outerLeft = -halfTrackWidth - lineWidth / 2;
