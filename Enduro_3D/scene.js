@@ -6,31 +6,14 @@ class Scene {
 
     constructor(gl, program) {
 
-        this.renderer =
-            new Renderer(gl, program);
-
+        this.renderer = new Renderer(gl, program);
         this.carPlayer = new EnduroCar(0.0, 0.0, -3.5);
         this.floor = new Floor();
         this.raceTrack = new RaceTrack();
-        //this.sky = new Sky();
         this.camera = new Camera();
-        this.controles = new Controles(this.camera);
-
-        /*
-            this.projectionTransform = m4.setOrthographicProjectionMatrix(
-                -1, 1,   // left, right
-                -1, 1,   // bottom, top
-                -5, -100 // near, far
-            );
-        */
-
-        /*
-            this.projectionTransform = m4.setPerspectiveProjectionMatrix(
-                -1, 1,   // left, right
-                -1, 1,   // bottom, top
-                -5, -100 // near, far
-            );
-        */
+        this.controls = new Controls(this.camera);
+        this.lights = new Lights();
+        //this.sky = new Sky();
 
 
         const fov = 60 * Math.PI / 180;
@@ -43,24 +26,6 @@ class Scene {
                 aspect,
                 near,
                 far);
-
-        // Tipos das luzes
-        this.lightTypes = [
-            0, // Luz direcional: sol
-            1  // Luz posicional: farol
-        ];
-
-        // Posições das luzes
-        this.lightPositions = [
-            [0, 0, 0],       // Sol: não utilizada pela luz direcional
-            [0, 4.0, 1000]   // Farol: posição provisória
-        ];
-
-        // Direções das luzes
-        this.lightDirections = [
-            [-1.0, -1.0, -2.0], // Direção do sol
-            [0, 0, -1]        // Direção provisória do farol
-        ];
 
         this.viewPosition = this.camera.P0;
     }
@@ -83,9 +48,7 @@ class Scene {
             this.renderer,
             this.camera.viewTransform,
             this.projectionTransform,
-            this.lightTypes,
-            this.lightPositions,
-            this.lightDirections,
+            this.lights,
             this.viewPosition
         );
 
@@ -94,9 +57,7 @@ class Scene {
             this.renderer,
             this.camera.viewTransform,
             this.projectionTransform,
-            this.lightTypes,
-            this.lightPositions,
-            this.lightDirections,
+            this.lights,
             this.viewPosition
         );
 
@@ -105,9 +66,7 @@ class Scene {
             this.renderer,
             this.camera.viewTransform,
             this.projectionTransform,
-            this.lightTypes,
-            this.lightPositions,
-            this.lightDirections,
+            this.lights,
             this.viewPosition
         );
 
@@ -116,9 +75,7 @@ class Scene {
             this.renderer,
             this.camera.viewTransform,
             this.projectionTransform,
-            this.lightTypes,
-            this.lightPositions,
-            this.lightDirections,
+            this.lights,
             this.viewPosition
         );*/
     }

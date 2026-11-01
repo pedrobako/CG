@@ -44,6 +44,7 @@ class Camera {
 
     setCarFocus() {
         this.PRef = [0, 0, -3.5];
+        this.azimuth = 0;
         this.radius = 2;
         this.elevation = 30 * Math.PI / 180;
 
@@ -52,12 +53,14 @@ class Camera {
 
     setGameFocus() {
         this.PRef = [0, 0, 7.0];
+        this.azimuth = 0;
         this.radius = 2;
         this.setViewTransform();
     }
 
     setThirdPerson() {
         this.PRef = [0, 0, -7.0];
+        this.azimuth = 0;
         this.radius = 6;
         this.elevation = 20 * Math.PI / 180;
 

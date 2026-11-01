@@ -23,18 +23,17 @@ class SceneObject {
         renderer,
         viewTransform,
         projectionTransform,
-        lightTypes,
-        lightPositions,
-        lightDirections,
+        lights,
         viewPosition
     ) {
         renderer.draw(
             this,
             viewTransform,
             projectionTransform,
-            lightTypes,
-            lightPositions,
-            lightDirections,
+            lights.lightTypes,
+            lights.lightPositions,
+            lights.lightDirections,
+            lights.lightIntensities,
             viewPosition
         );
     }

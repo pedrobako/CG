@@ -1,4 +1,4 @@
-class Controles {
+class Controls {
     constructor(camera) {
         this.camera = camera;
 

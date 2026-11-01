@@ -47,6 +47,7 @@ uniform vec3 u_lightPositions[MAX_LIGHTS];
 uniform vec3 u_lightDirections[MAX_LIGHTS];
 uniform int u_lightTypes[MAX_LIGHTS];
 uniform int u_numLights;
+uniform float u_lightIntensities[MAX_LIGHTS];
 uniform vec3 u_viewPosition;
 
 out vec4 outColor;
@@ -61,7 +62,7 @@ void main() {
     vec3 V = normalize(u_viewPosition - vSurfacePosition);
 
     // 1. Componente ambiente: calculada uma única vez
-    vec3 ambient = 0.05 * ambientReflection;
+    vec3 ambient = u_lightIntensities[2] * ambientReflection;
 
     // Acumulador das contribuições das luzes
     vec3 directLight = vec3(0.0);
@@ -129,13 +130,7 @@ void main() {
             specularFactor * specularReflection;
 
         // 6. Somar a contribuição desta luz
-        float lightIntensity;
-        if (u_lightTypes[i] == DIRECTIONAL_LIGHT) {
-            lightIntensity = 1.5;
-        } else {
-            lightIntensity = 1.0;
-        }
-        directLight += lightIntensity * attenuation * (diffuse + specular);
+        directLight += u_lightIntensities[i] * attenuation * (diffuse + specular);
     }
 
     // 7. Combinar ambiente e todas as luzes

@@ -68,6 +68,12 @@ class Renderer {
                 "u_lightDirections[0]"
             );
 
+        this.lightIntensitiesLocation =
+            gl.getUniformLocation(
+                program,
+                "u_lightIntensities[0]"
+            );
+
         this.viewPositionLocation =
             gl.getUniformLocation(
                 program,
@@ -87,7 +93,14 @@ class Renderer {
             gl.createBuffer();
     }
 
-    draw(object, viewTransform, projectionTransform, lightTypes, lightPositions, lightDirections, viewPosition) {
+    draw(object, 
+        viewTransform, 
+        projectionTransform, 
+        lightTypes, 
+        lightPositions, 
+        lightDirections, 
+        lightIntensities,
+        viewPosition) {
         const gl = this.gl;
 
         //Positions
@@ -219,6 +232,12 @@ class Renderer {
         gl.uniform3fv(
             this.lightDirectionsLocation,
             new Float32Array(lightDirections.flat())
+        );
+
+        // Intensidades das luzes
+        gl.uniform1fv(
+            this.lightIntensitiesLocation,
+            new Float32Array(lightIntensities)
         );
 
         gl.uniform3fv(
