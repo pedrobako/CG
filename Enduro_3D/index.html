@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -12,22 +13,37 @@
 
     <main class="game-container">
 
+        <!-- Área do jogo -->
         <section class="game-area">
             <canvas id="canvas" width="800" height="600"></canvas>
         </section>
 
+        <!-- Painel de controles -->
         <aside class="controls-area">
             <div class="keypad">
 
-                <div class="key">7</div>
+                <!-- Primeira linha -->
+                <div class="key" data-key="Numpad7">
+                    7
+                    <span class="key-label">Sun -</span>
+                </div>
 
                 <div class="key" data-key="Numpad8">
                     8
                     <span class="key-label">camera up</span>
                 </div>
 
-                <div class="key">9</div>
+                <div class="key" data-key="Numpad9">
+                    9
+                    <span class="key-label">Sun +</span>
+                </div>
 
+                <div class="key" data-key="Minus">
+                    -
+                    <span class="key-label">Amb -</span>
+                </div>
+
+                <!-- Segunda linha -->
                 <div class="key" data-key="Numpad4">
                     4
                     <span class="key-label">camera left</span>
@@ -43,6 +59,12 @@
                     <span class="key-label">camera right</span>
                 </div>
 
+                <div class="key" data-key="NumpadAdd">
+                    +
+                    <span class="key-label">Amb +</span>
+                </div>
+
+                <!-- Terceira linha -->
                 <div class="key" data-key="Numpad1">
                     1
                     <span class="key-label">1st person</span>
@@ -58,11 +80,18 @@
                     <span class="key-label">3rd person</span>
                 </div>
 
+                <div class="key" data-key="NumpadEnter">
+                    ↵
+                    <span class="key-label">Day / Night</span>
+                </div>
+
             </div>
         </aside>
 
     </main>
 
+    <!-- Scripts do projeto -->
+    <script src="constants.js"></script>
     <script src="m4.js"></script>
     <script src="addNormalsToGeometry.js"></script>
     <script src="floorGeometry.js"></script>
@@ -78,4 +107,5 @@
     <script src="main.js"></script>
 
 </body>
+
 </html>

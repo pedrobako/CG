@@ -31,13 +31,15 @@ void main() {
 `;
 
 
+
 const fragmentShaderSource = `#version 300 es
 
 precision mediump float;
 
 #define MAX_LIGHTS 4
-#define DIRECTIONAL_LIGHT 0
-#define POSITIONAL_LIGHT 1
+#define SUN_LIGHT 0
+#define AMBIENT_LIGHT 1
+#define FIRST_HEADLIGHT 2
 
 in vec3 vColor;
 in vec3 vNormal;
@@ -45,7 +47,6 @@ in vec3 vSurfacePosition;
 
 uniform vec3 u_lightPositions[MAX_LIGHTS];
 uniform vec3 u_lightDirections[MAX_LIGHTS];
-uniform int u_lightTypes[MAX_LIGHTS];
 uniform int u_numLights;
 uniform float u_lightIntensities[MAX_LIGHTS];
 uniform vec3 u_viewPosition;
@@ -62,33 +63,36 @@ void main() {
     vec3 V = normalize(u_viewPosition - vSurfacePosition);
 
     // 1. Componente ambiente: calculada uma única vez
-    vec3 ambient = u_lightIntensities[2] * ambientReflection;
+    vec3 ambient =
+        u_lightIntensities[AMBIENT_LIGHT] * ambientReflection;
 
-    // Acumulador das contribuições das luzes
     vec3 directLight = vec3(0.0);
 
-    // 2. Percorrer todas as fontes de luz ativas
+    // 2. Processar o Sol e os faróis
     for (int i = 0; i < MAX_LIGHTS; i++) {
 
         if (i >= u_numLights) {
             break;
         }
 
-        // Vetor da superfície até a luz
+        // A luz ambiente não participa da iluminação direta
+        if (i == AMBIENT_LIGHT) {
+            continue;
+        }
+
         vec3 L;
         float attenuation = 1.0;
+        float spotFactor = 1.0;
 
-        // Tipo 0: luz direcional (Sol)
-        // Tipo 1: luz posicional (faróis)
-        if (u_lightTypes[i] == DIRECTIONAL_LIGHT) {
+        if (i == SUN_LIGHT) {
 
-            L = normalize(-u_lightDirections[i]);
+            // Sol: luz direcional
+            L = normalize(-u_lightDirections[SUN_LIGHT]);
 
-        } else {
+        } else if (i >= FIRST_HEADLIGHT) {
 
-            // Luz posicional
-            vec3 surfaceToLight =
-                u_lightPositions[i] - vSurfacePosition;
+            // Faróis: luzes posicionais
+            vec3 surfaceToLight = u_lightPositions[i] - vSurfacePosition;
 
             float distanceToLight = length(surfaceToLight);
 
@@ -104,20 +108,39 @@ void main() {
                 a1 * distanceToLight +
                 a2 * distanceToLight * distanceToLight
             );
+
+            // Direção da luz até a superfície
+            vec3 lightToSurface = normalize(vSurfacePosition - u_lightPositions[i]);
+
+            // Cosseno do ângulo entre o facho e a superfície
+            float theta = dot(
+                lightToSurface,
+                normalize(u_lightDirections[i])
+            );
+
+            float innerCutoff = cos(radians(12.0));
+            float outerCutoff = cos(radians(15.0));
+
+            spotFactor = smoothstep(
+                outerCutoff,
+                innerCutoff,
+                theta
+            );
+
+        } else {
+            continue;
         }
 
-        // 4. Componente difusa
-        float diffuseFactor =
-            max(dot(N, L), 0.0);
+        // 3. Componente difusa
+        float diffuseFactor = max(dot(N, L), 0.0);
 
         vec3 diffuse =
             diffuseFactor * diffuseReflection;
 
-        // 5. Componente especular: Blinn-Phong
+        // 4. Componente especular: Blinn-Phong
         float specularFactor = 0.0;
 
         if (diffuseFactor > 0.0) {
-
             vec3 H = normalize(L + V);
 
             specularFactor = pow(
@@ -129,11 +152,15 @@ void main() {
         vec3 specular =
             specularFactor * specularReflection;
 
-        // 6. Somar a contribuição desta luz
-        directLight += u_lightIntensities[i] * attenuation * (diffuse + specular);
+        // 5. Acumular a contribuição da fonte
+        directLight +=
+            u_lightIntensities[i] *
+            attenuation *
+            spotFactor *
+            (diffuse + specular);
     }
 
-    // 7. Combinar ambiente e todas as luzes
+    // 6. Combinar iluminação ambiente e direta
     vec3 finalColor = ambient + directLight;
 
     outColor = vec4(
@@ -254,7 +281,12 @@ gl.enable(
 // ================================================================
 
 // ==================================================
-// CARREGAR E TESTAR UMA PEÇA DO MODELO GLB
+// CARREGAR O MODELO GLB
+// ==================================================
+
+
+// ==================================================
+// CARREGAR O MODELO GLB
 // ==================================================
 
 const gltfLoader = new GLTFLoader();
@@ -262,11 +294,6 @@ let carPiece = null;
 
 gltfLoader.load("models/enduroCar.glb")
     .then(resultado => {
-        const primitive = gltfLoader.getMeshPrimitive(
-            resultado.gltf,
-            resultado.binary,
-            0
-        );
 
         carPiece = gltfLoader.createCarGeometry(
             resultado.gltf,
@@ -279,5 +306,8 @@ gltfLoader.load("models/enduroCar.glb")
 
     })
     .catch(erro => {
-        console.error("Erro ao carregar ou processar o GLB:", erro);
+        console.error(
+            "Erro ao carregar ou processar o GLB:",
+            erro
+        );
     });

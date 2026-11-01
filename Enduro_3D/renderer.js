@@ -44,12 +44,6 @@ class Renderer {
                 "u_projectionTransform"
             );
 
-        this.lightTypesLocation =
-            gl.getUniformLocation(
-                program,
-                "u_lightTypes[0]"
-            );
-
         this.lightPositionsLocation =
             gl.getUniformLocation(
                 program,
@@ -95,8 +89,7 @@ class Renderer {
 
     draw(object, 
         viewTransform, 
-        projectionTransform, 
-        lightTypes, 
+        projectionTransform,
         lightPositions, 
         lightDirections, 
         lightIntensities,
@@ -214,12 +207,6 @@ class Renderer {
         gl.uniform1i(
             this.numLightsLocation,
             lightPositions.length
-        );
-
-        // Tipos das luzes
-        gl.uniform1iv(
-            this.lightTypesLocation,
-            new Int32Array(lightTypes)
         );
 
         // Posições das luzes

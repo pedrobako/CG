@@ -1,6 +1,8 @@
 class Controls {
-    constructor(camera) {
+    constructor(camera, lights) {
         this.camera = camera;
+        this.lights = lights;
+        this.isDay = true;
 
         // Teclado físico
         document.addEventListener("keydown", (event) => {
@@ -43,6 +45,32 @@ class Controls {
 
             case "Numpad3":
                 this.camera.setThirdPerson();
+                break;
+
+            case "Numpad7":
+                this.lights.reduceIntensitySun();
+                break;
+
+            case "Numpad9":
+                this.lights.addIntensitySun();
+                break;
+
+            case "Minus":
+            case "NumpadSubtract":
+                this.lights.reduceIntensityAmb();
+                break;
+
+            case "NumpadAdd":
+                this.lights.addIntensityAmb();
+                break;
+
+            case "NumpadEnter":
+                if (this.isDay) {
+                    this.lights.setNight();
+                } else {
+                    this.lights.setDay();
+                }
+                this.isDay = !this.isDay;
                 break;
         }
     }

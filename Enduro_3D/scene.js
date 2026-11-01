@@ -1,18 +1,27 @@
 // ==================================================
 // CLASS - SCENE
 // ==================================================
-
 class Scene {
 
     constructor(gl, program) {
 
         this.renderer = new Renderer(gl, program);
-        this.carPlayer = new EnduroCar(0.0, 0.0, -3.5);
+        this.lights = new Lights();
+        this.camera = new Camera();
         this.floor = new Floor();
         this.raceTrack = new RaceTrack();
-        this.camera = new Camera();
-        this.controls = new Controls(this.camera);
-        this.lights = new Lights();
+        this.controls = new Controls(this.camera, this.lights);
+        this.carPlayer = new EnduroCar(0.0, 0.0, -3.5, this.lights, BRANCO);
+        this.opponentCarsColors = [AZUL, AMARELO, VERDE, VERMELHO, ROSA];
+        this.opponentCars = [];
+
+        for (let i = 0; i < 3; i++) {
+            this.opponentCars.push(new EnduroCar(-1 + i, 0.0,
+                                                 -6 + (-5 * i),
+                                                 this.lights,
+                                                 this.opponentCarsColors[i]));
+        }
+
         //this.sky = new Sky();
 
 
@@ -51,6 +60,17 @@ class Scene {
             this.lights,
             this.viewPosition
         );
+
+        //Desenhar os carros oponentes
+        for (let i = 0; i < 3; i++) {
+            this.opponentCars[i].draw(
+                this.renderer,
+                this.camera.viewTransform,
+                this.projectionTransform,
+                this.lights,
+                this.viewPosition
+            )
+        }
 
         //Desenhar o piso
         this.floor.draw(
