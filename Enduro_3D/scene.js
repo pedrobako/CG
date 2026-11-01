@@ -9,20 +9,12 @@ class Scene {
         this.renderer =
             new Renderer(gl, program);
 
-        this.carroJogador = new EnduroCar(0, -7.0, 0);
+        this.carPlayer = new EnduroCar(0.0, 0.0, -3.5);
+        this.floor = new Floor();
         this.raceTrack = new RaceTrack();
-        this.sky = new Sky();
-
-        //DEFININDO A POSIÇÃO DA CÂMERA
-        const P0 = [0, 5, 15]; // Ponto de observação (onde está a câmera)
-        const Pref = [0, 0, 0]; // Ponto de referência (pra onde ela olha)
-        const V = [0, 1, 0];    // Vetor "up" (direção "pra cima" da câmera)
-
-        this.viewTransform = m4.setViewingMatrix(
-            P0,    // Ponto de observação (P0)
-            Pref,  // Ponto de referência (Pref)
-            V      // Vetor "up" (V)
-        );
+        //this.sky = new Sky();
+        this.camera = new Camera();
+        this.controles = new Controles(this.camera);
 
         /*
             this.projectionTransform = m4.setOrthographicProjectionMatrix(
@@ -43,7 +35,7 @@ class Scene {
 
         const fov = 60 * Math.PI / 180;
         const aspect = canvas.width / canvas.height;
-        const near = -5;
+        const near = -1;
         const far = -100;
 
         this.projectionTransform =
@@ -52,16 +44,29 @@ class Scene {
                 near,
                 far);
 
-        this.lightPositions = [
-            [4.0, 4.0, 5.0],
-            [4.0, -4.0, 5.0]
+        // Tipos das luzes
+        this.lightTypes = [
+            0, // Luz direcional: sol
+            1  // Luz posicional: farol
         ];
 
-        this.viewPosition = P0;
+        // Posições das luzes
+        this.lightPositions = [
+            [0, 0, 0],       // Sol: não utilizada pela luz direcional
+            [0, 4.0, 1000]   // Farol: posição provisória
+        ];
+
+        // Direções das luzes
+        this.lightDirections = [
+            [-1.0, -1.0, -2.0], // Direção do sol
+            [0, 0, -1]        // Direção provisória do farol
+        ];
+
+        this.viewPosition = this.camera.P0;
     }
 
     update() {
-        this.carroJogador.update();
+        this.carPlayer.update();
     }
 
     draw() {
@@ -72,30 +77,50 @@ class Scene {
         );
 
         gl.useProgram(program);
-        this.carroJogador.draw(
+
+        //Desenhar o carro do jogador
+        this.carPlayer.draw(
             this.renderer,
-            this.viewTransform,
+            this.camera.viewTransform,
             this.projectionTransform,
+            this.lightTypes,
             this.lightPositions,
+            this.lightDirections,
             this.viewPosition
         );
 
-        // Desenhar as linhas laterais da pista
+        //Desenhar o piso
+        this.floor.draw(
+            this.renderer,
+            this.camera.viewTransform,
+            this.projectionTransform,
+            this.lightTypes,
+            this.lightPositions,
+            this.lightDirections,
+            this.viewPosition
+        );
+
+        // Desenhar a pista
         this.raceTrack.draw(
             this.renderer,
-            this.viewTransform,
+            this.camera.viewTransform,
             this.projectionTransform,
+            this.lightTypes,
             this.lightPositions,
+            this.lightDirections,
             this.viewPosition
         );
 
+        /*Desenhar o céu
         this.sky.draw(
             this.renderer,
-            this.viewTransform,
+            this.camera.viewTransform,
             this.projectionTransform,
+            this.lightTypes,
             this.lightPositions,
+            this.lightDirections,
             this.viewPosition
-        );
+        );*/
     }
 
     execute() {

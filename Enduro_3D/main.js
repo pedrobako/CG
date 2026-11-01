@@ -36,12 +36,16 @@ const fragmentShaderSource = `#version 300 es
 precision mediump float;
 
 #define MAX_LIGHTS 4
+#define DIRECTIONAL_LIGHT 0
+#define POSITIONAL_LIGHT 1
 
 in vec3 vColor;
 in vec3 vNormal;
 in vec3 vSurfacePosition;
 
 uniform vec3 u_lightPositions[MAX_LIGHTS];
+uniform vec3 u_lightDirections[MAX_LIGHTS];
+uniform int u_lightTypes[MAX_LIGHTS];
 uniform int u_numLights;
 uniform vec3 u_viewPosition;
 
@@ -57,7 +61,7 @@ void main() {
     vec3 V = normalize(u_viewPosition - vSurfacePosition);
 
     // 1. Componente ambiente: calculada uma única vez
-    vec3 ambient = 0.2 * ambientReflection;
+    vec3 ambient = 0.05 * ambientReflection;
 
     // Acumulador das contribuições das luzes
     vec3 directLight = vec3(0.0);
@@ -70,23 +74,36 @@ void main() {
         }
 
         // Vetor da superfície até a luz
-        vec3 surfaceToLight =
-            u_lightPositions[i] - vSurfacePosition;
+        vec3 L;
+        float attenuation = 1.0;
 
-        float distanceToLight = length(surfaceToLight);
+        // Tipo 0: luz direcional (Sol)
+        // Tipo 1: luz posicional (faróis)
+        if (u_lightTypes[i] == DIRECTIONAL_LIGHT) {
 
-        vec3 L = normalize(surfaceToLight);
+            L = normalize(-u_lightDirections[i]);
 
-        // 3. Atenuação pela distância
-        float a0 = 1.0;
-        float a1 = 0.05;
-        float a2 = 0.005;
+        } else {
 
-        float attenuation = 1.0 / (
-            a0 +
-            a1 * distanceToLight +
-            a2 * distanceToLight * distanceToLight
-        );
+            // Luz posicional
+            vec3 surfaceToLight =
+                u_lightPositions[i] - vSurfacePosition;
+
+            float distanceToLight = length(surfaceToLight);
+
+            L = normalize(surfaceToLight);
+
+            // Atenuação pela distância
+            float a0 = 1.0;
+            float a1 = 0.05;
+            float a2 = 0.005;
+
+            attenuation = 1.0 / (
+                a0 +
+                a1 * distanceToLight +
+                a2 * distanceToLight * distanceToLight
+            );
+        }
 
         // 4. Componente difusa
         float diffuseFactor =
@@ -112,7 +129,13 @@ void main() {
             specularFactor * specularReflection;
 
         // 6. Somar a contribuição desta luz
-        directLight += attenuation * (diffuse + specular);
+        float lightIntensity;
+        if (u_lightTypes[i] == DIRECTIONAL_LIGHT) {
+            lightIntensity = 1.5;
+        } else {
+            lightIntensity = 1.0;
+        }
+        directLight += lightIntensity * attenuation * (diffuse + specular);
     }
 
     // 7. Combinar ambiente e todas as luzes
@@ -218,7 +241,7 @@ const program =
 // CONFIGURAÇÃO INICIAL DO WEBGL
 // ==================================================
 
-gl.clearColor(0.0, 100 / 255, 0.0, 1.0);
+gl.clearColor(0.20, 0.25, 1.0, 1.0);
 
 gl.viewport(
     0,

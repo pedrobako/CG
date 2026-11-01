@@ -19,29 +19,27 @@ class SceneObject {
         this.modelTransform = m4.identity();
     }
 
-    draw(renderer, viewTransform, projectionTransform, lightPosition, viewPosition) {
-
-        renderer.draw(this, viewTransform, projectionTransform, lightPosition, viewPosition);
+    draw(
+        renderer,
+        viewTransform,
+        projectionTransform,
+        lightTypes,
+        lightPositions,
+        lightDirections,
+        viewPosition
+    ) {
+        renderer.draw(
+            this,
+            viewTransform,
+            projectionTransform,
+            lightTypes,
+            lightPositions,
+            lightDirections,
+            viewPosition
+        );
     }
 }
 
-/*class EnduroCarObject extends SceneObject {
-    constructor() {
-        super(
-            carPiece.vertices,
-            carPiece.colors,
-            carPiece.normals,
-            carPiece.indices
-        );
-    }
-
-    update(tx, ty, tz, heading) {
-        this.modelTransform = m4.multiply(
-            m4.translation(tx, ty, tz),
-            m4.yRotation(heading)
-        );
-    }
-}*/
 class EnduroCar extends SceneObject {
     constructor(tx, ty, tz) {
         super(
@@ -55,13 +53,17 @@ class EnduroCar extends SceneObject {
         this.ty = ty;
         this.tz = tz;
         this.heading = -Math.PI / 2;
+        this.modelTransform = m4.multiply(
+            m4.translation(this.tx, this.ty, this.tz),
+            m4.multiply(
+                m4.yRotation(this.heading),
+                m4.scaling(0.2, 0.2, 0.2)
+            )
+        );
     }
 
     update() {
-        this.modelTransform = m4.multiply(
-            m4.translation(this.tx, this.ty, this.tz),
-            m4.yRotation(this.heading)
-        );
+
     }
 }
 
@@ -76,7 +78,7 @@ class RaceTrack extends SceneObject {
     }
 
     update() {
-        // A pista é estática; não precisa atualizar sua transformação.
+        // A pista ainda é estática; não precisa atualizar sua transformação.
     }
 }
 
@@ -91,8 +93,15 @@ class Sky extends SceneObject {
 
         this.modelTransform = m4.identity();
     }
+}
 
-    update() {
-        // O céu é estático; não precisa atualizar sua transformação.
+class Floor extends SceneObject {
+    constructor() {
+        super(
+            floorGeometry.vertices,
+            floorGeometry.colors,
+            floorGeometry.normals,
+            floorGeometry.indices
+        );
     }
 }

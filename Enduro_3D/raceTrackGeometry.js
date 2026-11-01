@@ -5,9 +5,10 @@ function raceTrackVertices() {
     // Largura da pista: 10 unidades.
     // Espessura das linhas: 0.08 unidade.
     // Comprimento: 100 unidades.
-
-    const halfTrackWidth = 5.0;
+    const TrackWidth = 4.0;
+    const halfTrackWidth = TrackWidth/2;
     const lineWidth = 0.08;
+    const Length = 100.0;
     const halfLength = 50.0;
     const y = 0.02;
 
@@ -49,7 +50,6 @@ function raceTrackColors() {
 function raceTrackIndices() {
     // Dois triângulos para cada retângulo.
     // A ordem dos vértices produz normais voltadas para cima.
-
     return new Uint16Array([
         // Linha esquerda
         0, 2, 1,
