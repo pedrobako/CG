@@ -68,6 +68,12 @@ class Renderer {
                 "u_lightIntensities[0]"
             );
 
+        this.emissiveLocation =
+            gl.getUniformLocation(
+                program,
+                "u_emissive"
+            );
+
         this.viewPositionLocation =
             gl.getUniformLocation(
                 program,
@@ -87,11 +93,11 @@ class Renderer {
             gl.createBuffer();
     }
 
-    draw(object, 
-        viewTransform, 
+    draw(object,
+        viewTransform,
         projectionTransform,
-        lightPositions, 
-        lightDirections, 
+        lightPositions,
+        lightDirections,
         lightIntensities,
         viewPosition) {
         const gl = this.gl;
@@ -225,6 +231,11 @@ class Renderer {
         gl.uniform1fv(
             this.lightIntensitiesLocation,
             new Float32Array(lightIntensities)
+        );
+
+        gl.uniform1i(
+            this.emissiveLocation,
+            object.emissive ? 1 : 0
         );
 
         gl.uniform3fv(

@@ -16,6 +16,11 @@ class SceneObject {
         this.normals = normals;
         this.indices = indices;
         this.lights = lights;
+        //Objetos podem ter a cor como emissiva
+        //Ou seja, brilharam mesmo no escuro
+        //O objetivo é fazer as lanternas trazeiras brilharem
+        //Buscando similaridade com o jogo original
+        this.emissive = false;
 
         this.modelTransform = m4.identity();
     }
@@ -55,7 +60,7 @@ class EnduroCar {
         );
 
         // Separação das partes do carro.
-        this.Body = new SceneObject(
+        this.body = new SceneObject(
             carPiece.carroceria.vertices,
             bodyColors,
             carPiece.carroceria.normals,
@@ -63,7 +68,7 @@ class EnduroCar {
             lights
         );
 
-        this.FrontLeftWheel = new SceneObject(
+        this.frontLeftWheel = new SceneObject(
             carPiece.roda1.vertices,
             carPiece.roda1.colors,
             carPiece.roda1.normals,
@@ -71,7 +76,7 @@ class EnduroCar {
             lights
         );
 
-        this.FrontRightWheel = new SceneObject(
+        this.frontRightWheel = new SceneObject(
             carPiece.roda2.vertices,
             carPiece.roda2.colors,
             carPiece.roda2.normals,
@@ -79,7 +84,7 @@ class EnduroCar {
             lights
         );
 
-        this.RearLeftWheel = new SceneObject(
+        this.rearLeftWheel = new SceneObject(
             carPiece.roda3.vertices,
             carPiece.roda3.colors,
             carPiece.roda3.normals,
@@ -87,7 +92,7 @@ class EnduroCar {
             lights
         );
 
-        this.RearRightWheel = new SceneObject(
+        this.rearRightWheel = new SceneObject(
             carPiece.roda4.vertices,
             carPiece.roda4.colors,
             carPiece.roda4.normals,
@@ -95,7 +100,7 @@ class EnduroCar {
             lights
         );
 
-        this.Headlights = new SceneObject(
+        this.headlights = new SceneObject(
             carPiece.farois.vertices,
             carPiece.farois.colors,
             carPiece.farois.normals,
@@ -103,7 +108,7 @@ class EnduroCar {
             lights
         );
 
-        this.Taillights = new SceneObject(
+        this.taillights = new SceneObject(
             carPiece.lanternas.vertices,
             carPiece.lanternas.colors,
             carPiece.lanternas.normals,
@@ -111,7 +116,7 @@ class EnduroCar {
             lights
         );
 
-        this.Windshield = new SceneObject(
+        this.windshield = new SceneObject(
             carPiece.parabrisa.vertices,
             carPiece.parabrisa.colors,
             carPiece.parabrisa.normals,
@@ -120,17 +125,19 @@ class EnduroCar {
         );
 
         this.parts = [
-            this.Body,
-            this.FrontLeftWheel,
-            this.FrontRightWheel,
-            this.RearLeftWheel,
-            this.RearRightWheel,
-            this.Headlights,
-            this.Taillights,
-            this.Windshield
+            this.body,
+            this.frontLeftWheel,
+            this.frontRightWheel,
+            this.rearLeftWheel,
+            this.rearRightWheel,
+            this.headlights,
+            this.taillights,
+            this.windshield
         ];
 
         this.changeColor();
+
+        this.taillights.emissive = true;
 
         this.updateModelTransform();
 
@@ -138,24 +145,13 @@ class EnduroCar {
     }
 
     changeColor() {
-        const colors = this.Body.colors;
-        const corOriginal = 204 / 255;
-
-        let verticesAlterados = 0;
+        const colors = this.body.colors;
 
         for (let i = 0; i < colors.length; i += 3) {
             colors[i] = this.cor[0];
             colors[i + 1] = this.cor[1];
             colors[i + 2] = this.cor[2];
-
-            verticesAlterados++;
         }
-
-        console.log(
-            "Cor do carro:", this.cor,
-            "| Vértices alterados:", verticesAlterados,
-            "| Total de vértices:", colors.length / 3
-        );
     }
 
     updateModelTransform() {

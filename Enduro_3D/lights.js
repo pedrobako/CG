@@ -19,6 +19,8 @@ class Lights {
         ];
 
         this.qtyLights = 2;
+
+        this.stage = DAY;
     }
 
     addIntensitySun() {
@@ -45,12 +47,14 @@ class Lights {
         this.lightIntensities[SUN_LIGHT] = 3.0;
         this.lightIntensities[AMBIENT_LIGHT] = 0.8;
         this.turnHeadLightsOff();
+        this.stage = DAY;
     }
 
     setNight() {
         this.lightIntensities[SUN_LIGHT] = 0.0;
         this.lightIntensities[AMBIENT_LIGHT] = 0.1;
         this.turnHeadLightsOn();
+        this.stage = NIGHT;
     }
 
     addCarHeadLight(xCar, yCar, zCar) {

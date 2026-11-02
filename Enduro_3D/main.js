@@ -51,6 +51,9 @@ uniform int u_numLights;
 uniform float u_lightIntensities[MAX_LIGHTS];
 uniform vec3 u_viewPosition;
 
+//Permite que peças brilhem independente da iluminação da cena
+uniform bool u_emissive;
+
 out vec4 outColor;
 
 void main() {
@@ -163,10 +166,10 @@ void main() {
     // 6. Combinar iluminação ambiente e direta
     vec3 finalColor = ambient + directLight;
 
-    outColor = vec4(
-        clamp(finalColor, 0.0, 1.0),
-        1.0
-    );
+    if (u_emissive)
+        outColor = vec4(vColor, 1.0);
+    else
+        outColor = vec4(clamp(finalColor, 0.0, 1.0), 1.0);
 }
 `;
 
