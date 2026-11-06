@@ -10,16 +10,22 @@ class Scene {
         this.camera = new Camera();
         this.floor = new Floor();
         this.raceTrack = new RaceTrack();
-        this.controls = new Controls(this.camera, this.lights);
         this.carPlayer = new EnduroCar(0.0, 0.0, -3.5, this.lights, BRANCO);
+        this.moon = new Moon();
+        this.controls = new Controls(this, this.camera, this.lights, this.carPlayer);
         this.opponentCarsColors = [AZUL, AMARELO, VERDE, VERMELHO, ROSA];
         this.opponentCars = [];
+        this.speed = 0.0;
+
+        this.textures = {
+            "1": this.renderer.loadTexture("textures/lua.jpg")
+        };
 
         for (let i = 0; i < 3; i++) {
             this.opponentCars.push(new EnduroCar(-1 + i, 0.0,
-                                                 -6 + (-5 * i),
-                                                 this.lights,
-                                                 this.opponentCarsColors[i]));
+                -6 + (-5 * i),
+                this.lights,
+                this.opponentCarsColors[i]));
         }
 
         //this.sky = new Sky();
@@ -28,7 +34,7 @@ class Scene {
         const fov = 60 * Math.PI / 180;
         const aspect = canvas.width / canvas.height;
         const near = -1;
-        const far = -100;
+        const far = -200;
 
         this.projectionTransform =
             m4.setPerspectiveProjectionMatrixAngle(fov,
@@ -39,8 +45,19 @@ class Scene {
         this.viewPosition = this.camera.P0;
     }
 
-    update() {
-        this.carPlayer.update();
+    update(deltaTime) {
+        this.controls.update();
+
+        const collisionType = Collisions.detectCollision(this.carPlayer,this.opponentCars,this.raceTrack);
+
+        if (collisionType)
+            this.speed = Collisions.reactCollision(collisionType,this.carPlayer,deltaTime);
+
+        for (const car of this.opponentCars) {
+            car.verticalMovement(this.speed, deltaTime);
+        }
+
+
     }
 
     draw() {
@@ -90,6 +107,15 @@ class Scene {
             this.viewPosition
         );
 
+        // Desenhar a Lua
+        this.moon.draw(
+            this.renderer,
+            this.camera.viewTransform,
+            this.projectionTransform,
+            this.lights,
+            this.viewPosition
+        );
+
         /*Desenhar o céu
         this.sky.draw(
             this.renderer,
@@ -100,21 +126,25 @@ class Scene {
         );*/
     }
 
-    execute() {
+    execute(timestamp) {
+        if (this.lastTimestamp === undefined) {
+            this.lastTimestamp = timestamp;
+        }
 
-        this.update();
+        const deltaTime = (timestamp - this.lastTimestamp) / 1000;
+
+        this.lastTimestamp = timestamp;
+
+        this.update(deltaTime);
+
         this.draw();
 
-        requestAnimationFrame(
-            () => this.execute()
-        );
+        requestAnimationFrame((timestamp) => this.execute(timestamp));
     }
 
     init() {
 
-        requestAnimationFrame(
-            () => this.execute()
-        );
+        requestAnimationFrame((timestamp) => this.execute(timestamp));
     }
 }
 

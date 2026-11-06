@@ -10,10 +10,12 @@ const vertexShaderSource = `#version 300 es
 in vec3 aPosition;
 in vec3 aColor;
 in vec3 aNormal;
+in vec2 aTexCoord;
 
 out vec3 vColor;
 out vec3 vNormal;
 out vec3 vSurfacePosition;
+out vec2 vTexCoord;
 
 uniform mat4 u_modelTransform;
 uniform mat4 u_viewTransform;

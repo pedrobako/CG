@@ -44,152 +44,6 @@ class SceneObject {
     }
 }
 
-class EnduroCar {
-
-    constructor(tx, ty, tz, lights, cor) {
-
-        // Transformações do carro.
-        this.tx = tx;
-        this.ty = ty;
-        this.tz = tz;
-        this.cor = cor;
-
-        // Cada carro terá sua própria cópia das cores da carroceria.
-        const bodyColors = new Float32Array(
-            carPiece.carroceria.colors
-        );
-
-        // Separação das partes do carro.
-        this.body = new SceneObject(
-            carPiece.carroceria.vertices,
-            bodyColors,
-            carPiece.carroceria.normals,
-            carPiece.carroceria.indices,
-            lights
-        );
-
-        this.frontLeftWheel = new SceneObject(
-            carPiece.roda1.vertices,
-            carPiece.roda1.colors,
-            carPiece.roda1.normals,
-            carPiece.roda1.indices,
-            lights
-        );
-
-        this.frontRightWheel = new SceneObject(
-            carPiece.roda2.vertices,
-            carPiece.roda2.colors,
-            carPiece.roda2.normals,
-            carPiece.roda2.indices,
-            lights
-        );
-
-        this.rearLeftWheel = new SceneObject(
-            carPiece.roda3.vertices,
-            carPiece.roda3.colors,
-            carPiece.roda3.normals,
-            carPiece.roda3.indices,
-            lights
-        );
-
-        this.rearRightWheel = new SceneObject(
-            carPiece.roda4.vertices,
-            carPiece.roda4.colors,
-            carPiece.roda4.normals,
-            carPiece.roda4.indices,
-            lights
-        );
-
-        this.headlights = new SceneObject(
-            carPiece.farois.vertices,
-            carPiece.farois.colors,
-            carPiece.farois.normals,
-            carPiece.farois.indices,
-            lights
-        );
-
-        this.taillights = new SceneObject(
-            carPiece.lanternas.vertices,
-            carPiece.lanternas.colors,
-            carPiece.lanternas.normals,
-            carPiece.lanternas.indices,
-            lights
-        );
-
-        this.windshield = new SceneObject(
-            carPiece.parabrisa.vertices,
-            carPiece.parabrisa.colors,
-            carPiece.parabrisa.normals,
-            carPiece.parabrisa.indices,
-            lights
-        );
-
-        this.parts = [
-            this.body,
-            this.frontLeftWheel,
-            this.frontRightWheel,
-            this.rearLeftWheel,
-            this.rearRightWheel,
-            this.headlights,
-            this.taillights,
-            this.windshield
-        ];
-
-        this.changeColor();
-
-        this.taillights.emissive = true;
-
-        this.updateModelTransform();
-
-        lights.addCarHeadLight(this.tx, this.ty, this.tz);
-    }
-
-    changeColor() {
-        const colors = this.body.colors;
-
-        for (let i = 0; i < colors.length; i += 3) {
-            colors[i] = this.cor[0];
-            colors[i + 1] = this.cor[1];
-            colors[i + 2] = this.cor[2];
-        }
-    }
-
-    updateModelTransform() {
-
-        const transformation = m4.translation(
-            this.tx,
-            this.ty,
-            this.tz
-        );
-
-        for (const part of this.parts) {
-            part.modelTransform = transformation;
-        }
-    }
-
-    update() {
-
-    }
-
-    draw(
-        renderer,
-        viewTransform,
-        projectionTransform,
-        lights,
-        viewPosition
-    ) {
-        for (const parte of this.parts) {
-            parte.draw(
-                renderer,
-                viewTransform,
-                projectionTransform,
-                lights,
-                viewPosition
-            );
-        }
-    }
-}
-
 class RaceTrack extends SceneObject {
     constructor() {
         super(
@@ -198,6 +52,8 @@ class RaceTrack extends SceneObject {
             raceTrackGeometry.normals,
             raceTrackGeometry.indices
         );
+        this.leftLimit = - TRACK_WIDTH/2;
+        this.rightLimit = TRACK_WIDTH/2;
     }
 
     update() {
@@ -226,5 +82,20 @@ class Floor extends SceneObject {
             floorGeometry.normals,
             floorGeometry.indices
         );
+    }
+}
+
+class Moon extends SceneObject {
+    constructor() {
+        super(
+            moonGeometry.vertices,
+            moonGeometry.colors,
+            moonGeometry.normals,
+            moonGeometry.indices
+        );
+
+        this.modelTransform = m4.translation(50, 20, -150);
+          //  m4.scaling(2, 2, 2)
+        //);
     }
 }

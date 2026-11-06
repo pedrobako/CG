@@ -1,22 +1,16 @@
 
 function raceTrackVertices() {
-    // Duas linhas laterais da pista.
-    // Eixo Y = vertical; eixo Z = comprimento da pista.
-    // Largura da pista: 10 unidades.
-    // Espessura das linhas: 0.08 unidade.
-    // Comprimento: 100 unidades.
-    const trackWidth = 4.0;
-    const halfTrackWidth = trackWidth/2;
+    const halfTrackWidth = TRACK_WIDTH/2;
     const lineWidth = 0.08;
     const length = 200.0;
-    const halfLength = length/2;
+    const halfLength = TRACK_LENGHT/2;
     const y = 0.02;
 
-    const outerLeft = -halfTrackWidth - lineWidth / 2;
-    const innerLeft = -halfTrackWidth + lineWidth / 2;
+    const outerLeft = -halfTrackWidth - lineWidth;
+    const innerLeft = -halfTrackWidth;
 
-    const innerRight = halfTrackWidth - lineWidth / 2;
-    const outerRight = halfTrackWidth + lineWidth / 2;
+    const innerRight = halfTrackWidth;
+    const outerRight = halfTrackWidth + lineWidth;
 
     return new Float32Array([
         // Linha lateral esquerda

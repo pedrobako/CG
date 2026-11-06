@@ -1,24 +1,94 @@
 class Controls {
-    constructor(camera, lights) {
+    constructor(scene, camera, lights, carPlayer) {
+        this.scene = scene;
         this.camera = camera;
         this.lights = lights;
+        this.carPlayer = carPlayer;
         this.isDay = true;
+
+        // Controles contínuos ativos
+        this.activeControls = new Set();
 
         // Teclado físico
         document.addEventListener("keydown", (event) => {
-            this.handleControl(event.code);
+            if (this.isContinuousControl(event.code)) {
+                event.preventDefault();
+                this.activeControls.add(event.code);
+            } else {
+                this.handleControl(event.code);
+            }
         });
 
-        // Cliques nos botões da interface
+        document.addEventListener("keyup", (event) => {
+            this.activeControls.delete(event.code);
+        });
+
+        // Evita manter teclas pressionadas ao perder o foco da janela
+        window.addEventListener("blur", () => {
+            this.activeControls.clear();
+        });
+
+        // Botões da interface
         document.querySelectorAll(".key[data-key]").forEach((button) => {
+            const key = button.dataset.key;
+
+            button.addEventListener("pointerdown", (event) => {
+                if (!this.isContinuousControl(key)) return;
+
+                event.preventDefault();
+                this.activeControls.add(key);
+                button.setPointerCapture(event.pointerId);
+            });
+
+            const stopControl = () => {
+                this.activeControls.delete(key);
+            };
+
+            button.addEventListener("pointerup", stopControl);
+            button.addEventListener("pointercancel", stopControl);
+            button.addEventListener("lostpointercapture", stopControl);
+
+            // Os controles de ação única continuam usando click
             button.addEventListener("click", () => {
-                this.handleControl(button.dataset.key);
+                if (!this.isContinuousControl(key)) {
+                    this.handleControl(key);
+                }
             });
         });
     }
 
-    handleControl(key) {
+    isContinuousControl(key) {
+        return [
+            "ArrowLeft",
+            "ArrowRight",
+            "Space",
+            "Numpad8",
+            "Numpad2",
+            "Numpad4",
+            "Numpad6"
+        ].includes(key);
+    }
+
+    update() {
+        for (const key of this.activeControls) {
+            this.handleContinuousControl(key);
+        }
+    }
+
+    handleContinuousControl(key) {
         switch (key) {
+            case "ArrowLeft":
+                this.carPlayer.horizontalMovement(-0.05);
+                break;
+
+            case "ArrowRight":
+                this.carPlayer.horizontalMovement(0.05);
+                break;
+
+            case "Space":
+                this.scene.speed += 0.5;
+                break;
+
             case "Numpad8":
                 this.camera.setUp();
                 break;
@@ -34,7 +104,11 @@ class Controls {
             case "Numpad6":
                 this.camera.setRight();
                 break;
+        }
+    }
 
+    handleControl(key) {
+        switch (key) {
             case "Numpad5":
                 this.camera.setCarFocus();
                 break;
