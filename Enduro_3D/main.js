@@ -27,6 +27,7 @@ void main() {
 
     vNormal = transpose(inverse(mat3(u_modelTransform))) * aNormal;
     vSurfacePosition = (u_modelTransform * vec4(aPosition, 1)).xyz;
+    vTexCoord = aTexCoord;
 
     gl_Position = u_projectionTransform * u_viewTransform * u_modelTransform * vec4(aPosition, 1.0);
 }
@@ -46,12 +47,15 @@ precision mediump float;
 in vec3 vColor;
 in vec3 vNormal;
 in vec3 vSurfacePosition;
+in vec2 vTexCoord;
 
 uniform vec3 u_lightPositions[MAX_LIGHTS];
 uniform vec3 u_lightDirections[MAX_LIGHTS];
 uniform int u_numLights;
 uniform float u_lightIntensities[MAX_LIGHTS];
 uniform vec3 u_viewPosition;
+uniform sampler2D u_texture;
+uniform bool u_hasTexture;
 
 //Permite que peças brilhem independente da iluminação da cena
 uniform bool u_emissive;
@@ -60,8 +64,16 @@ out vec4 outColor;
 
 void main() {
 
-    vec3 ambientReflection = vColor;
-    vec3 diffuseReflection = vColor;
+    vec3 textureColor;
+
+    if (u_hasTexture) {
+        textureColor = texture(u_texture, vTexCoord).rgb;
+    } else {
+        textureColor = vColor;
+    }
+
+    vec3 ambientReflection = textureColor;
+    vec3 diffuseReflection = textureColor;
     vec3 specularReflection = vec3(1.0);
 
     vec3 N = normalize(vNormal);
@@ -168,9 +180,12 @@ void main() {
     // 6. Combinar iluminação ambiente e direta
     vec3 finalColor = ambient + directLight;
 
-    if (u_emissive)
-        outColor = vec4(vColor, 1.0);
-    else
+    if (u_emissive){
+        if (u_hasTexture)
+            outColor = vec4(textureColor, 1.0);    
+        else
+            outColor = vec4(vColor, 1.0);
+    } else
         outColor = vec4(clamp(finalColor, 0.0, 1.0), 1.0);
 }
 `;

@@ -26,6 +26,23 @@ class Renderer {
                 "aNormal"
             );
 
+        this.uHasTexture = gl.getUniformLocation(
+            this.program,
+            "u_hasTexture"
+        );
+
+        this.texCoordLocation =
+            gl.getAttribLocation(
+                program,
+                "aTexCoord"
+            );
+
+        this.textureLocation =
+            gl.getUniformLocation(
+                program,
+                "u_texture"
+            );
+
         this.modelTransformLocation =
             gl.getUniformLocation(
                 program,
@@ -80,17 +97,15 @@ class Renderer {
                 "u_viewPosition"
             );
 
-        this.verticesBuffer =
-            gl.createBuffer();
+        this.verticesBuffer = gl.createBuffer();
 
-        this.colorBuffer =
-            gl.createBuffer();
+        this.colorBuffer = gl.createBuffer();
 
-        this.normalBuffer =
-            gl.createBuffer();
+        this.normalBuffer = gl.createBuffer();
 
-        this.indexBuffer =
-            gl.createBuffer();
+        this.indexBuffer = gl.createBuffer();
+
+        this.texCoordBuffer = gl.createBuffer();
     }
 
     draw(object,
@@ -195,6 +210,31 @@ class Renderer {
             object.modelTransform
         );
 
+        //Texturas
+        gl.bindBuffer(
+            gl.ARRAY_BUFFER,
+            this.texCoordBuffer
+        );
+
+        gl.bufferData(
+            gl.ARRAY_BUFFER,
+            object.texCoords,
+            gl.STATIC_DRAW
+        );
+
+        gl.enableVertexAttribArray(
+            this.texCoordLocation
+        );
+
+        gl.vertexAttribPointer(
+            this.texCoordLocation,
+            2,
+            gl.FLOAT,
+            false,
+            0,
+            0
+        );
+
         //View Transform
         gl.uniformMatrix4fv(
             this.viewTransformLocation,
@@ -241,6 +281,24 @@ class Renderer {
         gl.uniform3fv(
             this.viewPositionLocation,
             viewPosition
+        );
+
+        //Texturas
+        gl.uniform1i(
+            this.uHasTexture,
+            object.hasTexture ? 1 : 0
+        );
+
+        gl.activeTexture(gl.TEXTURE0);
+
+        gl.bindTexture(
+            gl.TEXTURE_2D,
+            object.texture
+        );
+
+        gl.uniform1i(
+            this.textureLocation,
+            0
         );
 
         //DRAW OBJECT USING INDICES

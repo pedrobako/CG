@@ -11,22 +11,23 @@ class Scene {
         this.floor = new Floor();
         this.raceTrack = new RaceTrack();
         this.carPlayer = new EnduroCar(0.0, 0.0, -3.5, this.lights, BRANCO);
-        this.moon = new Moon();
+        this.moon = new Moon(this.renderer);
         this.controls = new Controls(this, this.camera, this.lights, this.carPlayer);
-        this.opponentCarsColors = [AZUL, AMARELO, VERDE, VERMELHO, ROSA];
-        this.opponentCars = [];
         this.speed = 0.0;
+        this.isDay = true;
+        this.opponentCarsColors = [AZUL, AMARELO, VERDE, VERMELHO, ROSA];
 
-        this.textures = {
-            "1": this.renderer.loadTexture("textures/lua.jpg")
-        };
-
+        this.opponentCars = [];
         for (let i = 0; i < 3; i++) {
             this.opponentCars.push(new EnduroCar(-1 + i, 0.0,
                 -6 + (-5 * i),
                 this.lights,
                 this.opponentCarsColors[i]));
         }
+
+        this.lateralObjects = [];
+        this.lateralObjects.push(new BillBoard(this.renderer, "left", -20));
+        this.lateralObjects.push(new BillBoard(this.renderer, "right", -40));
 
         //this.sky = new Sky();
 
@@ -48,10 +49,10 @@ class Scene {
     update(deltaTime) {
         this.controls.update();
 
-        const collisionType = Collisions.detectCollision(this.carPlayer,this.opponentCars,this.raceTrack);
+        const collisionType = Collisions.detectCollision(this.carPlayer, this.opponentCars, this.raceTrack);
 
         if (collisionType)
-            this.speed = Collisions.reactCollision(collisionType,this.carPlayer,deltaTime);
+            this.speed = Collisions.reactCollision(collisionType, this.carPlayer, deltaTime);
 
         for (const car of this.opponentCars) {
             car.verticalMovement(this.speed, deltaTime);
@@ -79,7 +80,7 @@ class Scene {
         );
 
         //Desenhar os carros oponentes
-        for (let i = 0; i < 3; i++) {
+        for (let i = 0; i < this.opponentCars.length; i++) {
             this.opponentCars[i].draw(
                 this.renderer,
                 this.camera.viewTransform,
@@ -107,14 +108,26 @@ class Scene {
             this.viewPosition
         );
 
-        // Desenhar a Lua
-        this.moon.draw(
-            this.renderer,
-            this.camera.viewTransform,
-            this.projectionTransform,
-            this.lights,
-            this.viewPosition
-        );
+        for (const lateralObject of this.lateralObjects) {
+            lateralObject.draw(
+                this.renderer,
+                this.camera.viewTransform,
+                this.projectionTransform,
+                this.lights,
+                this.viewPosition
+            );
+        }
+
+        if (!this.isDay) {
+            // Desenhar a Lua
+            this.moon.draw(
+                this.renderer,
+                this.camera.viewTransform,
+                this.projectionTransform,
+                this.lights,
+                this.viewPosition
+            );
+        }
 
         /*Desenhar o céu
         this.sky.draw(
@@ -124,6 +137,19 @@ class Scene {
             this.lights,
             this.viewPosition
         );*/
+    }
+
+    setNight() {
+        gl.clearColor(0.0, 0.0, 0.0, 1.0);
+        this.lights.setNight();
+        this.isDay = false;
+    }
+
+    setDay() {
+
+        gl.clearColor(0.20, 0.25, 1.0, 1.0);
+        this.lights.setDay();
+        this.isDay = true;
     }
 
     execute(timestamp) {

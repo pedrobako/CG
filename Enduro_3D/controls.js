@@ -4,7 +4,6 @@ class Controls {
         this.camera = camera;
         this.lights = lights;
         this.carPlayer = carPlayer;
-        this.isDay = true;
 
         // Controles contínuos ativos
         this.activeControls = new Set();
@@ -139,12 +138,11 @@ class Controls {
                 break;
 
             case "NumpadEnter":
-                if (this.isDay) {
-                    this.lights.setNight();
+                if (this.scene.isDay) {
+                    this.scene.setNight();
                 } else {
-                    this.lights.setDay();
+                    this.scene.setDay();
                 }
-                this.isDay = !this.isDay;
                 break;
         }
     }

@@ -2,12 +2,13 @@
 // GEOMETRY
 // ==================================================
 
-function addNormalsToGeometry(vertices, colors, indices) {
+function addNormalsToGeometry(vertices, colors, indices, texCoords=null) {
 
     const newVertices = [];
     const newColors = [];
     const newNormals = [];
     const newIndices = [];
+    const newTexCoords = [];
 
     // Cada triângulo terá seus próprios vértices.
     // Isso permite atribuir uma normal constante
@@ -88,6 +89,15 @@ function addNormalsToGeometry(vertices, colors, indices) {
             newNormals.push(nx, ny, nz);
 
             newIndices.push(newIndices.length);
+
+            // Coordenadas UV
+            if (!texCoords)
+                texCoords = new Float32Array((vertices.length / 3) * 2);
+
+            newTexCoords.push(
+                texCoords[index * 2],
+                texCoords[index * 2 + 1]
+            );
         }
     }
 
@@ -95,6 +105,7 @@ function addNormalsToGeometry(vertices, colors, indices) {
         vertices: new Float32Array(newVertices),
         colors: new Float32Array(newColors),
         normals: new Float32Array(newNormals),
-        indices: new Uint16Array(newIndices)
+        indices: new Uint16Array(newIndices),
+        texCoords: new Float32Array(newTexCoords)
     };
 }

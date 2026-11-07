@@ -21,6 +21,10 @@ class SceneObject {
         //O objetivo é fazer as lanternas trazeiras brilharem
         //Buscando similaridade com o jogo original
         this.emissive = false;
+        
+        this.hasTexture = false;
+        this.texCoords = new Float32Array((vertices.length / 3) * 2);
+        this.texture = null;
 
         this.modelTransform = m4.identity();
     }
@@ -86,7 +90,7 @@ class Floor extends SceneObject {
 }
 
 class Moon extends SceneObject {
-    constructor() {
+    constructor(renderer) {
         super(
             moonGeometry.vertices,
             moonGeometry.colors,
@@ -95,7 +99,29 @@ class Moon extends SceneObject {
         );
 
         this.modelTransform = m4.translation(50, 20, -150);
-          //  m4.scaling(2, 2, 2)
-        //);
+        this.hasTexture = true;
+        this.texture = renderer.loadTexture("textures/lua.jpg");
+        this.texCoords = moonGeometry.texCoords;
+        this.emissive = true;
+    }
+}
+
+class BillBoard extends SceneObject {
+    constructor(renderer, side, tz) {
+        super(
+            billboardGeometry.vertices,
+            billboardGeometry.colors,
+            billboardGeometry.normals,
+            billboardGeometry.indices
+        );
+
+        if (side == "left")
+            this.modelTransform = m4.multiply(m4.translation(-8, 0, tz), m4.yRotation(Math.PI / 6));
+        if (side == "right")
+            this.modelTransform = m4.multiply(m4.translation(8, 0, tz), m4.yRotation(-Math.PI / 6));
+        
+        this.hasTexture = true;
+        this.texture = renderer.loadTexture("textures/outdoor1.jpg");
+        this.texCoords = billboardGeometry.texCoords;
     }
 }
