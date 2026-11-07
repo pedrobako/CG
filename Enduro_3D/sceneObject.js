@@ -106,22 +106,97 @@ class Moon extends SceneObject {
     }
 }
 
-class BillBoard extends SceneObject {
-    constructor(renderer, side, tz) {
-        super(
-            billboardGeometry.vertices,
-            billboardGeometry.colors,
-            billboardGeometry.normals,
-            billboardGeometry.indices
+class Billboard {
+
+    constructor(renderer, lights, tz, side, texturePath) {
+        this.tx = 8.0;
+        this.ty = 0.0;
+        this.tz = tz;
+        this.theta = -Math.PI / 6;
+        this.side = side;
+
+        // Painel publicitário
+        this.panel = new SceneObject(
+            billboardPanelGeometry.vertices,
+            billboardPanelGeometry.colors,
+            billboardPanelGeometry.normals,
+            billboardPanelGeometry.indices
+        );
+        this.panel.hasTexture = true;
+        this.panel.texture = renderer.loadTexture(texturePath);
+        this.panel.texCoords = billboardPanelGeometry.texCoords;
+
+        // Quatro luminárias
+        this.lamps = new SceneObject(
+            billboardLampsGeometry.vertices,
+            billboardLampsGeometry.colors,
+            billboardLampsGeometry.normals,
+            billboardLampsGeometry.indices
         );
 
-        if (side == "left")
-            this.modelTransform = m4.multiply(m4.translation(-8, 0, tz), m4.yRotation(Math.PI / 6));
-        if (side == "right")
-            this.modelTransform = m4.multiply(m4.translation(8, 0, tz), m4.yRotation(-Math.PI / 6));
-        
-        this.hasTexture = true;
-        this.texture = renderer.loadTexture("textures/outdoor1.jpg");
-        this.texCoords = billboardGeometry.texCoords;
+        // Estrutura de sustentação
+        this.structure = new SceneObject(
+            billboardStructureGeometry.vertices,
+            billboardStructureGeometry.colors,
+            billboardStructureGeometry.normals,
+            billboardStructureGeometry.indices
+        );
+
+        this.parts = [
+            this.structure,
+            this.lamps,
+            this.panel
+        ];
+
+        this.lamps.emissive = true;
+
+        this.initialTransformation();
+
+        lights.addPanelLight(this.tx, this.ty, this.tz);
+    }
+
+    initialTransformation(){
+        if (this.side == "left"){
+            this.tx = -this.tx;
+            this.theta = -this.theta;
+        }
+        const transformation = m4.multiply(m4.translation(this.tx, this.ty, this.tz), m4.yRotation(this.theta));
+
+        // A transformação será compartilhada pelos componentes.
+
+        for (const part of this.parts) {
+            part.modelTransform = transformation;
+        }
+    }
+    
+    updateModelTransform() {
+
+        // A transformação será compartilhada pelos componentes.
+        const transformation = m4.translation(this.tx, this.ty, this.tz);
+
+        for (const part of this.parts) {
+            part.modelTransform = transformation;
+        }
+    }
+
+    verticalMovement(speed, deltaTime) {
+        const displacement = speed * deltaTime;
+
+        this.tz += displacement;
+
+        this.updateModelTransform();
+    }
+
+    draw(renderer, viewTransform, projectionTransform, lights, viewPosition) {
+
+        for (const part of this.parts) {
+            part.draw(
+                renderer,
+                viewTransform,
+                projectionTransform,
+                lights,
+                viewPosition
+            );
+        }
     }
 }

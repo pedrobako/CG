@@ -6,6 +6,7 @@ class EnduroCar {
         this.x = tx;
         this.y = ty;
         this.z = tz;
+        this.lights = lights;
         this.cor = cor;
 
         // Cada carro terá sua própria cópia das cores da carroceria.
@@ -19,7 +20,7 @@ class EnduroCar {
             bodyColors,
             carPiece.carroceria.normals,
             carPiece.carroceria.indices,
-            lights
+            this.lights
         );
 
         this.frontLeftWheel = new SceneObject(
@@ -27,7 +28,7 @@ class EnduroCar {
             carPiece.roda1.colors,
             carPiece.roda1.normals,
             carPiece.roda1.indices,
-            lights
+            this.lights
         );
 
         this.frontRightWheel = new SceneObject(
@@ -35,7 +36,7 @@ class EnduroCar {
             carPiece.roda2.colors,
             carPiece.roda2.normals,
             carPiece.roda2.indices,
-            lights
+            this.lights
         );
 
         this.rearLeftWheel = new SceneObject(
@@ -43,7 +44,7 @@ class EnduroCar {
             carPiece.roda3.colors,
             carPiece.roda3.normals,
             carPiece.roda3.indices,
-            lights
+            this.lights
         );
 
         this.rearRightWheel = new SceneObject(
@@ -51,7 +52,7 @@ class EnduroCar {
             carPiece.roda4.colors,
             carPiece.roda4.normals,
             carPiece.roda4.indices,
-            lights
+            this.lights
         );
 
         this.headlights = new SceneObject(
@@ -59,7 +60,7 @@ class EnduroCar {
             carPiece.farois.colors,
             carPiece.farois.normals,
             carPiece.farois.indices,
-            lights
+            this.lights
         );
 
         this.taillights = new SceneObject(
@@ -67,7 +68,7 @@ class EnduroCar {
             carPiece.lanternas.colors,
             carPiece.lanternas.normals,
             carPiece.lanternas.indices,
-            lights
+            this.lights
         );
 
         this.windshield = new SceneObject(
@@ -75,7 +76,7 @@ class EnduroCar {
             carPiece.parabrisa.colors,
             carPiece.parabrisa.normals,
             carPiece.parabrisa.indices,
-            lights
+            this.lights
         );
 
         this.parts = [
@@ -91,7 +92,7 @@ class EnduroCar {
 
         this.taillights.emissive = true;
 
-        lights.addCarHeadLight(this.x, this.y, this.z);
+        this.lights.addCarHeadLight(this.x, this.y, this.z);
 
         this.updateCarPosition();
         this.changeColor();
@@ -179,6 +180,8 @@ class EnduroCar {
         this.xCenter += tx;
 
         this.updateCarPosition();
+
+        this.lights.carPlayerHorizontalMovement(tx);
     }
 
     draw(

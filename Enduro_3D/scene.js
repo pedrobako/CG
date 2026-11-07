@@ -26,8 +26,10 @@ class Scene {
         }
 
         this.lateralObjects = [];
-        this.lateralObjects.push(new BillBoard(this.renderer, "left", -20));
-        this.lateralObjects.push(new BillBoard(this.renderer, "right", -40));
+        this.lateralObjects.push(
+            new Billboard(this.renderer, this.lights, -20, "left", "textures/outdoor1.jpg"));
+        this.lateralObjects.push(
+            new Billboard(this.renderer, this.lights, -40, "right", "textures/outdoor2.jpg"));
 
         //this.sky = new Sky();
 
@@ -58,7 +60,11 @@ class Scene {
             car.verticalMovement(this.speed, deltaTime);
         }
 
+        for (const lateralObject of this.lateralObjects) {
+            lateralObject.verticalMovement(this.speed, deltaTime);
+        }
 
+        this.lights.verticalMovement(this.speed, deltaTime);
     }
 
     draw() {
