@@ -1,7 +1,32 @@
 // ==================================================
-// GEOMETRY
+// Funções auxiliares de cálculos sobre geometrias
 // ==================================================
 
+// ==================================================
+// Função para calcular o centro de geometrias
+// ==================================================
+function getGeometryCenter(vertices) {
+    const min = [Infinity, Infinity, Infinity];
+    const max = [-Infinity, -Infinity, -Infinity];
+
+    for (let i = 0; i < vertices.length; i += 3) {
+        for (let axis = 0; axis < 3; axis++) {
+            min[axis] = Math.min(min[axis], vertices[i + axis]);
+            max[axis] = Math.max(max[axis], vertices[i + axis]);
+        }
+    }
+
+    return [
+        (min[0] + max[0]) / 2,
+        (min[1] + max[1]) / 2,
+        (min[2] + max[2]) / 2
+    ];
+}
+
+
+// ==================================================
+// Função para calcular as normais dos vértices
+// ==================================================
 function addNormalsToGeometry(vertices, colors, indices, texCoords=null) {
 
     const newVertices = [];

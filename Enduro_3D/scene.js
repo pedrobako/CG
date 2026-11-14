@@ -16,6 +16,7 @@ class Scene {
         this.speed = 0.0;
         this.isDay = true;
         this.opponentCarsColors = [AZUL, AMARELO, VERDE, VERMELHO, ROSA];
+        this.start = false;
 
         this.opponentCars = [];
         for (let i = 0; i < 3; i++) {
@@ -29,7 +30,7 @@ class Scene {
         this.lateralObjects.push(
             new Billboard(this.renderer, this.lights, -20, "left", "textures/outdoor1.jpg"));
         this.lateralObjects.push(
-            new Billboard(this.renderer, this.lights, -40, "right", "textures/outdoor2.jpg"));
+            new Billboard(this.renderer, this.lights, -60, "right", "textures/outdoor2.jpg"));
 
         //this.sky = new Sky();
 
@@ -58,13 +59,20 @@ class Scene {
 
         for (const car of this.opponentCars) {
             car.verticalMovement(this.speed, deltaTime);
+            
+            if (this.start)
+                car.rotateWheels(deltaTime);
         }
+        if (this.start){
+            this.carPlayer.rotateWheels(deltaTime);
 
-        for (const lateralObject of this.lateralObjects) {
-            lateralObject.verticalMovement(this.speed, deltaTime);
+            for (const lateralObject of this.lateralObjects) {
+                lateralObject.verticalMovement(this.speed + 5.0, deltaTime);
+            }
         }
 
         this.lights.verticalMovement(this.speed, deltaTime);
+        console.log(this.speed);
     }
 
     draw() {
@@ -134,15 +142,6 @@ class Scene {
                 this.viewPosition
             );
         }
-
-        /*Desenhar o céu
-        this.sky.draw(
-            this.renderer,
-            this.camera.viewTransform,
-            this.projectionTransform,
-            this.lights,
-            this.viewPosition
-        );*/
     }
 
     setNight() {

@@ -60,6 +60,7 @@ class Controls {
         return [
             "ArrowLeft",
             "ArrowRight",
+            "ArrowDown",
             "Space",
             "Numpad8",
             "Numpad2",
@@ -84,8 +85,13 @@ class Controls {
                 this.carPlayer.horizontalMovement(0.05);
                 break;
 
+            case "ArrowDown":
+                this.scene.speed -= 0.5;
+                break;
+
             case "Space":
                 this.scene.speed += 0.5;
+                this.scene.start = true;
                 break;
 
             case "Numpad8":

@@ -160,7 +160,8 @@ class Billboard {
             this.tx = -this.tx;
             this.theta = -this.theta;
         }
-        const transformation = m4.multiply(m4.translation(this.tx, this.ty, this.tz), m4.yRotation(this.theta));
+        const transformation =
+            m4.multiply(m4.translation(this.tx, this.ty, this.tz), m4.yRotation(this.theta));
 
         // A transformação será compartilhada pelos componentes.
 

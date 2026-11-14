@@ -8,7 +8,7 @@ class Lights {
 
         // Direções das luzes
         this.lightDirections = [
-            [0.0, -1.0, -1.0], // Direção do sol
+            [0.5, -1.0, -1.0], // Direção do sol
             [0, 0, 0]           // A luz ambiente desconsidera a direção
         ];
 

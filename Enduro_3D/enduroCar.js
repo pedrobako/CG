@@ -23,7 +23,7 @@ class EnduroCar {
             this.lights
         );
 
-        this.frontLeftWheel = new SceneObject(
+        this.frontLeftWheel = new EnduroCarWheel(
             carPiece.roda1.vertices,
             carPiece.roda1.colors,
             carPiece.roda1.normals,
@@ -31,7 +31,7 @@ class EnduroCar {
             this.lights
         );
 
-        this.frontRightWheel = new SceneObject(
+        this.frontRightWheel = new EnduroCarWheel(
             carPiece.roda2.vertices,
             carPiece.roda2.colors,
             carPiece.roda2.normals,
@@ -39,7 +39,7 @@ class EnduroCar {
             this.lights
         );
 
-        this.rearLeftWheel = new SceneObject(
+        this.rearLeftWheel = new EnduroCarWheel(
             carPiece.roda3.vertices,
             carPiece.roda3.colors,
             carPiece.roda3.normals,
@@ -47,7 +47,7 @@ class EnduroCar {
             this.lights
         );
 
-        this.rearRightWheel = new SceneObject(
+        this.rearRightWheel = new EnduroCarWheel(
             carPiece.roda4.vertices,
             carPiece.roda4.colors,
             carPiece.roda4.normals,
@@ -79,15 +79,22 @@ class EnduroCar {
             this.lights
         );
 
-        this.parts = [
-            this.body,
+        this.wheels = [
             this.frontLeftWheel,
             this.frontRightWheel,
             this.rearLeftWheel,
-            this.rearRightWheel,
+            this.rearRightWheel
+        ];
+
+        this.parts = [
+            this.body,
             this.headlights,
             this.taillights,
-            this.windshield
+            this.windshield,
+            this.frontLeftWheel,
+            this.frontRightWheel,
+            this.rearLeftWheel,
+            this.rearRightWheel
         ];
 
         this.taillights.emissive = true;
@@ -104,7 +111,7 @@ class EnduroCar {
         this.zMax = 0.0;
         this.xCenter = 0.0;
         this.zCenter = 0.0;
-        this.getCollisionsParameters();
+        this.updateCollisionsParameters();
     }
 
     updateCarPosition() {
@@ -119,6 +126,14 @@ class EnduroCar {
         }
     }
 
+    rotateWheels(deltaTime) {
+
+        const carTransform = m4.translation(this.x, this.y, this.z);
+
+        for (const wheel of this.wheels)
+            wheel.rotate(deltaTime, carTransform);
+    }
+
     changeColor() {
         const colors = this.body.colors;
 
@@ -129,7 +144,7 @@ class EnduroCar {
         }
     }
 
-    getCollisionsParameters() {
+    updateCollisionsParameters() {
         let xMin = Infinity;
         let xMax = -Infinity;
         let zMin = Infinity;
@@ -168,7 +183,7 @@ class EnduroCar {
     }
 
     horizontalMovement(tx) {
-        
+
         if ((this.xMin + tx) < TRACK_LEFT_LIMIT)
             tx = TRACK_LEFT_LIMIT - this.xMin;
         else if ((this.xMax + tx) > TRACK_RIGHT_LIMIT)
@@ -200,5 +215,46 @@ class EnduroCar {
                 viewPosition
             );
         }
+    }
+}
+
+class EnduroCarWheel extends SceneObject {
+
+    constructor(vertices, colors, normals, indices, lights) {
+        super(
+            vertices,
+            colors,
+            normals,
+            indices,
+            lights
+        );
+
+        this.pivot = getGeometryCenter(this.vertices);
+
+        this.rotationAngle = 0.0;
+        this.rotationSpeed = - Math.PI;
+    }
+
+    rotate(deltaTime, carTransform) {
+
+        this.rotationAngle += this.rotationSpeed * deltaTime;
+
+        const toOrigin = m4.translation(
+            -this.pivot[0],
+            -this.pivot[1],
+            -this.pivot[2]
+        );
+
+        const fromOrigin = m4.translation(
+            this.pivot[0],
+            this.pivot[1],
+            this.pivot[2]
+        );
+
+        const rotation = m4.xRotation(this.rotationAngle);
+
+        const wheelRotation = m4.multiply(fromOrigin, m4.multiply(rotation, toOrigin));
+
+        this.modelTransform = m4.multiply(carTransform, wheelRotation);
     }
 }
