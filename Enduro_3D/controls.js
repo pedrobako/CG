@@ -86,11 +86,13 @@ class Controls {
                 break;
 
             case "ArrowDown":
-                this.scene.speed -= 0.5;
+                if (this.scene.speed > -10.0) 
+                    this.scene.speed -= 0.5;
                 break;
 
             case "Space":
-                this.scene.speed += 0.5;
+                if (this.scene.speed < 20.0)
+                    this.scene.speed += 0.5;
                 this.scene.start = true;
                 break;
 

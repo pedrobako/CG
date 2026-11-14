@@ -21,7 +21,7 @@ class SceneObject {
         //O objetivo é fazer as lanternas trazeiras brilharem
         //Buscando similaridade com o jogo original
         this.emissive = false;
-        
+
         this.hasTexture = false;
         this.texCoords = new Float32Array((vertices.length / 3) * 2);
         this.texture = null;
@@ -49,19 +49,33 @@ class SceneObject {
 }
 
 class RaceTrack extends SceneObject {
-    constructor() {
+    constructor(renderer) {
         super(
             raceTrackGeometry.vertices,
             raceTrackGeometry.colors,
             raceTrackGeometry.normals,
             raceTrackGeometry.indices
         );
-        this.leftLimit = - TRACK_WIDTH/2;
-        this.rightLimit = TRACK_WIDTH/2;
+        this.leftLimit = - TRACK_WIDTH / 2;
+        this.rightLimit = TRACK_WIDTH / 2;
+        this.hasTexture = true;
+        this.texture = renderer.createRaceTrackTexture();
+        this.baseTexCoords = new Float32Array(raceTrackGeometry.texCoords);
+        this.texCoords = new Float32Array(this.baseTexCoords);
+        this.textureOffset = 0.0;
+        this.tileLength = RACE_TRACK_TILE_LENGTH;
     }
 
-    update() {
-        // A pista ainda é estática; não precisa atualizar sua transformação.
+    verticalMovement(speed, deltaTime) {
+        const displacement = speed * deltaTime;
+
+        this.textureOffset =
+            (this.textureOffset + displacement / this.tileLength) % 1.0;
+
+        for (let i = 0; i < this.texCoords.length; i += 2) {
+            this.texCoords[i + 1] =
+                this.baseTexCoords[i + 1] - this.textureOffset;
+        }
     }
 }
 
@@ -155,8 +169,8 @@ class Billboard {
         lights.addPanelLight(this.tx, this.ty, this.tz);
     }
 
-    initialTransformation(){
-        if (this.side == "left"){
+    initialTransformation() {
+        if (this.side == "left") {
             this.tx = -this.tx;
             this.theta = -this.theta;
         }
@@ -169,7 +183,7 @@ class Billboard {
             part.modelTransform = transformation;
         }
     }
-    
+
     updateModelTransform() {
 
         // A transformação será compartilhada pelos componentes.

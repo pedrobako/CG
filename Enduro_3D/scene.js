@@ -9,7 +9,7 @@ class Scene {
         this.lights = new Lights();
         this.camera = new Camera();
         this.floor = new Floor();
-        this.raceTrack = new RaceTrack();
+        this.raceTrack = new RaceTrack(this.renderer);
         this.carPlayer = new EnduroCar(0.0, 0.0, -3.5, this.lights, BRANCO);
         this.moon = new Moon(this.renderer);
         this.controls = new Controls(this, this.camera, this.lights, this.carPlayer);
@@ -31,6 +31,7 @@ class Scene {
             new Billboard(this.renderer, this.lights, -20, "left", "textures/outdoor1.jpg"));
         this.lateralObjects.push(
             new Billboard(this.renderer, this.lights, -60, "right", "textures/outdoor2.jpg"));
+        this.lateralObjects.push(this.raceTrack);
 
         //this.sky = new Sky();
 
@@ -67,7 +68,7 @@ class Scene {
             this.carPlayer.rotateWheels(deltaTime);
 
             for (const lateralObject of this.lateralObjects) {
-                lateralObject.verticalMovement(this.speed + 5.0, deltaTime);
+                lateralObject.verticalMovement(this.speed + 15.0, deltaTime);
             }
         }
 

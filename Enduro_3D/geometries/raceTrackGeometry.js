@@ -1,7 +1,7 @@
 
 function raceTrackVertices() {
     const halfTrackWidth = TRACK_WIDTH/2;
-    const lineWidth = 0.08;
+    const lineWidth = 0.5;
     const length = 200.0;
     const halfLength = TRACK_LENGHT/2;
     const y = 0.02;
@@ -55,10 +55,58 @@ function raceTrackIndices() {
     ]);
 }
 
+function raceTrackTexCoords() {
+
+    const repeatCount = TRACK_LENGHT / RACE_TRACK_TILE_LENGTH;
+
+    return new Float32Array([
+        // Faixa esquerda
+        0, 0,
+        1, 0,
+        1, repeatCount,
+        0, repeatCount,
+
+        // Faixa direita
+        0, 0,
+        1, 0,
+        1, repeatCount,
+        0, repeatCount
+    ]);
+}
+
+// ==================================================
+// GENERATE RACE TRACK TEXTURE COORDINATES
+// ==================================================
+
+function raceTrackTexCoords() {
+    const texCoords = [];
+
+    const repeatCount = TRACK_LENGHT / RACE_TRACK_TILE_LENGTH;
+
+    // Faixa lateral esquerda
+    texCoords.push(
+        0.0, 0.0,
+        1.0, 0.0,
+        1.0, repeatCount,
+        0.0, repeatCount
+    );
+
+    // Faixa lateral direita
+    texCoords.push(
+        0.0, 0.0,
+        1.0, 0.0,
+        1.0, repeatCount,
+        0.0, repeatCount
+    );
+
+    return texCoords;
+}
+
 
 // Criar a geometria com normais para iluminação.
 const raceTrackGeometry = addNormalsToGeometry(
     raceTrackVertices(),
     raceTrackColors(),
-    raceTrackIndices()
+    raceTrackIndices(),
+    raceTrackTexCoords()
 );
