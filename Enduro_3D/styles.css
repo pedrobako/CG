@@ -310,3 +310,46 @@ body {
     font-size: 10px;
     line-height: 12px;
 }
+
+/* Celulares na vertical */
+@media (max-width: 600px) and (orientation: portrait) {
+
+    #game-hud {
+        transform: translateX(-50%) scale(0.72);
+        transform-origin: bottom center;
+    }
+
+}
+
+/* Celulares na horizontal */
+@media (max-width: 900px) and (orientation: landscape) {
+
+    .game-container {
+        flex-direction: column;
+        align-items: center;
+        justify-content: flex-start;
+        gap: 12px;
+    }
+
+    .game-area {
+        flex: 0 0 auto;
+        width: min(
+            calc((100dvh - 20px) * 4 / 3),
+            calc(100vw - 16px)
+        );
+        margin-inline: auto;
+    }
+
+    #canvas {
+        display: block;
+        width: 100%;
+        height: auto;
+    }
+
+    .controls-area {
+        width: 100%;
+        min-width: 0;
+        padding-top: 12px;
+    }
+
+}
