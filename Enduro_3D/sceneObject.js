@@ -99,7 +99,10 @@ class Moon extends SceneObject {
             moonGeometry.indices
         );
 
-        this.modelTransform = m4.translation(50, 20, -150);
+        //this.modelTransform = m4.translation(50, 20, -150);
+        this.modelTransform = m4.multiply(m4.translation(40, 15, -100),
+                                            m4.scaling(0.7, 0.7, 0.7)
+                                );
         this.hasTexture = true;
         this.texture = renderer.loadTexture("textures/lua.jpg");
         this.texCoords = moonGeometry.texCoords;
@@ -153,7 +156,7 @@ class Billboard {
 
         this.initialTransformation();
 
-        lights.addPanelLight(this.x, this.y, this.z);
+        this.panelLightsId = lights.addPanelLights(this.x, this.y, this.z);
     }
 
     initialTransformation() {

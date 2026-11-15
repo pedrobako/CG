@@ -110,7 +110,7 @@ class EnduroCar {
 
         this.taillights.emissive = true;
 
-        this.lights.addCarHeadLight(this.x, this.y, this.z);
+        this.headlightsId = this.lights.addCarHeadLight(this.x, this.y, this.z);
 
         this.changeColor();
 
@@ -141,8 +141,8 @@ class EnduroCar {
         this.updateCollisionsParameters();
     }
 
-    getTrackPosition(){
-        if(this.xMax <= LEFT_LIMIT_POS_CENTER)
+    getTrackPosition() {
+        if (this.xMax <= LEFT_LIMIT_POS_CENTER)
             return POS_LEFT;
         else if (this.xMin >= RIGHT_LIMIT_POS_CENTER)
             return POS_RIGHT;
@@ -200,11 +200,7 @@ class EnduroCar {
         const displacement = speed * deltaTime;
 
         this.z += displacement;
-/*
-        this.zMin += displacement;
-        this.zMax += displacement;
-        this.zCenter += displacement;
-*/
+
         this.updateCar();
     }
 
@@ -216,11 +212,7 @@ class EnduroCar {
             tx = TRACK_RIGHT_LIMIT - this.xMax;
 
         this.x += tx;
-/*
-        this.xMin += tx;
-        this.xMax += tx;
-        this.xCenter += tx;
-*/
+
         this.updateCar();
 
         this.lights.carPlayerHorizontalMovement(tx);

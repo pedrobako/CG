@@ -69,30 +69,28 @@ class Controls {
         ].includes(key);
     }
 
-    update() {
+    update(deltaTime) {
         for (const key of this.activeControls) {
-            this.handleContinuousControl(key);
+            this.handleContinuousControl(key, deltaTime);
         }
     }
 
-    handleContinuousControl(key) {
+    handleContinuousControl(key, deltaTime) {
         switch (key) {
             case "ArrowLeft":
-                this.carPlayer.horizontalMovement(-0.05);
+                this.carPlayer.horizontalMovement(-1.5 * deltaTime);
                 break;
 
             case "ArrowRight":
-                this.carPlayer.horizontalMovement(0.05);
+                this.carPlayer.horizontalMovement(1.5 * deltaTime);
                 break;
 
             case "ArrowDown":
-                if (this.scene.speed > -10.0)
-                    this.scene.speed -= 1.0;
+                this.scene.speed = Math.max(-10.0, this.scene.speed - 30.0 * deltaTime);
                 break;
 
             case "Space":
-                if (this.scene.speed < 20.0)
-                    this.scene.speed += 0.5;
+                this.scene.speed = Math.min(20.0, this.scene.speed + 30.0 * deltaTime);
                 this.scene.start = true;
                 break;
 
@@ -158,11 +156,7 @@ class Controls {
                 break;
 
             case "KeyD":
-                if (!this.scene.start){
-                    this.scene.carsToOvertakePerLevel = 10;
-                    this.scene.carsRemaining = 10;
-                    this.scene.updateHUD();
-                }
+                this.scene.activateDemoMode();
                 break;
         }
     }

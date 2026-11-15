@@ -43,7 +43,7 @@ class Scene {
     }
 
     update(deltaTime) {
-        this.controls.update();
+        this.controls.update(deltaTime);
 
         if (this.paused)
             return;
@@ -67,7 +67,7 @@ class Scene {
             this.carPlayer.rotateWheels(deltaTime);
 
             for (const lateralObject of this.lateralObjects) {
-                lateralObject.verticalMovement(this.speed + 15.0, deltaTime);
+                lateralObject.verticalMovement(this.speed, deltaTime);
             }
         }
 
@@ -193,22 +193,20 @@ class Scene {
                     else
                         pos = POS_RIGHT;
 
+                this.lights.removeCarHeadlights(this.opponentCars[i].headlightsId);
+                
                 this.opponentCars[i] = this.getOneOpponent(pos, -100);
             }
         }
     }
 
-    // FUNÇÃO PARA CRIAR OS COMPNENTES LATERAIS
+    // FUNÇÃO PARA CRIAR OS COMPONENTES LATERAIS
     createLateralObjects() {
         this.lateralObjects.push(
             new Billboard(this.renderer, this.lights, -20, "left", "textures/outdoor1.jpg"));
         this.lateralObjects.push(
             new Billboard(this.renderer, this.lights, -60, "right", "textures/outdoor2.jpg"));
-        /*this.lateralObjects.push(
-            new Billboard(this.renderer, this.lights, -100, "right", "textures/outdoor1.jpg"));
-        this.lateralObjects.push(
-            new Billboard(this.renderer, this.lights, -120, "left", "textures/outdoor2.jpg"));
-        */
+        
         this.lateralObjects.push(this.raceTrack);
     }
 
@@ -227,6 +225,8 @@ class Scene {
                     texture = "textures/outdoor1.jpg";
                 else
                     texture = "textures/outdoor2.jpg";
+
+                this.lights.removePanelLights(this.lateralObjects[i].panelLightsId);
 
                 this.lateralObjects[i] =
                     new Billboard(this.renderer, this.lights, -100, side, texture);
