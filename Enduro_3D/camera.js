@@ -47,7 +47,7 @@ class Camera {
     }
 
     setCarFocus() {
-        this.PRef = [0, 0, -3.5];
+        this.PRef = [0, 0, -4.0];
         this.azimuth = 0;
         this.radius = 2;
         this.elevation = 30 * Math.PI / 180;

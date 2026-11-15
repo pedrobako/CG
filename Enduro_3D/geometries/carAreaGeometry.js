@@ -17,7 +17,7 @@ function carAreaVertices() {
 }
 
 function carAreaColors() {
-    const color = [BRIGHT_RED];
+    const color = [RED];
     const colors = [];
 
     for (let i = 0; i < 8; i++) {

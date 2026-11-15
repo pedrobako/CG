@@ -102,6 +102,103 @@ function raceTrackTexCoords() {
     return texCoords;
 }
 
+// ==================================================
+// GENERATE RACE TRACK DEBUG GEOMETRY
+// ==================================================
+
+function generateRaceTrackDebugVertices() {
+
+    const halfTrackWidth = TRACK_WIDTH / 2;
+    const halfLength = TRACK_LENGHT / 2;
+
+    const lineWidth = 0.1;//0.025;
+    const y = 0.04;
+
+    const vertices = [];
+
+    function addRectangle(x1, z1, x2, z2) {
+        vertices.push(
+            x1, y, z1,
+            x2, y, z1,
+            x2, y, z2,
+            x1, y, z2
+        );
+    }
+
+    // Duas linhas longitudinais: divisão em três partes.
+    const leftDivision = -TRACK_WIDTH / 6;
+    const rightDivision = TRACK_WIDTH / 6;
+
+    addRectangle(
+        leftDivision - lineWidth / 2,
+        -halfLength,
+        leftDivision + lineWidth / 2,
+        halfLength
+    );
+
+    addRectangle(
+        rightDivision - lineWidth / 2,
+        -halfLength,
+        rightDivision + lineWidth / 2,
+        halfLength
+    );
+
+    // Linha transversal: limite posterior da pista.
+    const rearLimitZ = -6.4;
+
+    addRectangle(
+        -halfTrackWidth,
+        rearLimitZ - lineWidth / 2,
+        halfTrackWidth,
+        rearLimitZ + lineWidth / 2
+    );
+
+    return new Float32Array(vertices);
+}
+
+
+// ==================================================
+// GENERATE RACE TRACK DEBUG COLORS
+// ==================================================
+
+function generateRaceTrackDebugColors() {
+
+    const colors = [];
+
+    // Branco para as duas linhas longitudinais (8 vértices).
+    for (let i = 0; i < 8; i++) {
+        colors.push(...WHITE);
+    }
+
+    // Preto para a linha transversal (4 vértices).
+    for (let i = 0; i < 4; i++) {
+        colors.push(...BLACK);
+    }
+
+    return new Float32Array(colors);
+}
+
+
+// ==================================================
+// GENERATE RACE TRACK DEBUG INDICES
+// ==================================================
+
+function generateRaceTrackDebugIndices() {
+
+    return new Uint16Array([
+        0, 1, 2, 0, 2, 3,
+        4, 5, 6, 4, 6, 7,
+        8, 9, 10, 8, 10, 11
+    ]);
+}
+
+
+const raceTrackDebugGeometry = addNormalsToGeometry(
+    generateRaceTrackDebugVertices(),
+    generateRaceTrackDebugColors(),
+    generateRaceTrackDebugIndices()
+);
+
 
 // Criar a geometria com normais para iluminação.
 const raceTrackGeometry = addNormalsToGeometry(

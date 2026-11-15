@@ -9,6 +9,17 @@ class EnduroCar {
         this.lights = lights;
         this.cor = cor;
 
+        // O carro pode estar em 3 posições na pista
+        // 1 lado esquerdo
+        // 2 centro
+        // 3 lado direito
+        this.pos = POS_CENTER;
+
+        // Situação do carro adversário
+        // 0 não ultrapassado
+        // 1 ultrapassado
+        this.overtakeStatus = NOT_OVERTAKEN;
+
         // Cada carro terá sua própria cópia das cores da carroceria.
         const bodyColors = new Float32Array(
             carPiece.carroceria.colors
@@ -101,7 +112,6 @@ class EnduroCar {
 
         this.lights.addCarHeadLight(this.x, this.y, this.z);
 
-        this.updateCarPosition();
         this.changeColor();
 
         // Obtendo os parâmetros do carro para verificar colisões
@@ -112,19 +122,35 @@ class EnduroCar {
         this.xCenter = 0.0;
         this.zCenter = 0.0;
         this.updateCollisionsParameters();
+        this.updateCar();
     }
 
-    updateCarPosition() {
+    updateCar() {
 
         const transformation = m4.translation(this.x, this.y, this.z);
-
-        if (this.z > 200)
-            this.z = -100;
 
         for (const part of this.parts) {
             part.modelTransform = transformation;
         }
+
+        //O carro pode estar em 3 posições na pista
+        // 1 lado esquerdo
+        // 2 centro
+        // 3 lado direito
+        this.pos = this.getTrackPosition();
+        this.updateCollisionsParameters();
     }
+
+    getTrackPosition(){
+        if(this.xMax <= LEFT_LIMIT_POS_CENTER)
+            return POS_LEFT;
+        else if (this.xMin >= RIGHT_LIMIT_POS_CENTER)
+            return POS_RIGHT;
+        else
+            return POS_CENTER;
+    }
+
+
 
     rotateWheels(deltaTime) {
 
@@ -174,12 +200,12 @@ class EnduroCar {
         const displacement = speed * deltaTime;
 
         this.z += displacement;
-
+/*
         this.zMin += displacement;
         this.zMax += displacement;
         this.zCenter += displacement;
-
-        this.updateCarPosition();
+*/
+        this.updateCar();
     }
 
     horizontalMovement(tx) {
@@ -190,11 +216,12 @@ class EnduroCar {
             tx = TRACK_RIGHT_LIMIT - this.xMax;
 
         this.x += tx;
+/*
         this.xMin += tx;
         this.xMax += tx;
         this.xCenter += tx;
-
-        this.updateCarPosition();
+*/
+        this.updateCar();
 
         this.lights.carPlayerHorizontalMovement(tx);
     }

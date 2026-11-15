@@ -79,19 +79,6 @@ class RaceTrack extends SceneObject {
     }
 }
 
-class Sky extends SceneObject {
-    constructor() {
-        super(
-            skyGeometry.vertices,
-            skyGeometry.colors,
-            skyGeometry.normals,
-            skyGeometry.indices
-        );
-
-        this.modelTransform = m4.identity();
-    }
-}
-
 class Floor extends SceneObject {
     constructor() {
         super(
@@ -123,9 +110,9 @@ class Moon extends SceneObject {
 class Billboard {
 
     constructor(renderer, lights, tz, side, texturePath) {
-        this.tx = 8.0;
-        this.ty = 0.0;
-        this.tz = tz;
+        this.x = 8.0;
+        this.y = 0.0;
+        this.z = tz;
         this.theta = -Math.PI / 6;
         this.side = side;
 
@@ -166,19 +153,18 @@ class Billboard {
 
         this.initialTransformation();
 
-        lights.addPanelLight(this.tx, this.ty, this.tz);
+        lights.addPanelLight(this.x, this.y, this.z);
     }
 
     initialTransformation() {
         if (this.side == "left") {
-            this.tx = -this.tx;
+            this.x = -this.x;
             this.theta = -this.theta;
         }
         const transformation =
-            m4.multiply(m4.translation(this.tx, this.ty, this.tz), m4.yRotation(this.theta));
+            m4.multiply(m4.translation(this.x, this.y, this.z), m4.yRotation(this.theta));
 
         // A transformação será compartilhada pelos componentes.
-
         for (const part of this.parts) {
             part.modelTransform = transformation;
         }
@@ -187,7 +173,7 @@ class Billboard {
     updateModelTransform() {
 
         // A transformação será compartilhada pelos componentes.
-        const transformation = m4.translation(this.tx, this.ty, this.tz);
+        const transformation = m4.translation(this.x, this.y, this.z);
 
         for (const part of this.parts) {
             part.modelTransform = transformation;
@@ -197,7 +183,7 @@ class Billboard {
     verticalMovement(speed, deltaTime) {
         const displacement = speed * deltaTime;
 
-        this.tz += displacement;
+        this.z += displacement;
 
         this.updateModelTransform();
     }
@@ -213,5 +199,18 @@ class Billboard {
                 viewPosition
             );
         }
+    }
+}
+
+class RaceTrackDebug extends SceneObject {
+
+    constructor() {
+
+        super(
+            raceTrackDebugGeometry.vertices,
+            raceTrackDebugGeometry.colors,
+            raceTrackDebugGeometry.normals,
+            raceTrackDebugGeometry.indices
+        );
     }
 }

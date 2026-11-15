@@ -15,11 +15,38 @@
 
         <!-- Área do jogo -->
         <section class="game-area">
+
             <canvas id="canvas" width="800" height="600"></canvas>
+
+            <!-- HUD: Painel de pontuação -->
+            <<div id="game-hud">
+
+                <div id="score-panel">
+
+                    <!-- Distância percorrida -->
+                    <div id="distance">000000</div>
+
+                    <!-- Level -->
+                    <div id="level">1</div>
+
+                    <!-- Carros restantes -->
+                    <div id="cars-remaining">
+
+                        <img src="textures/car-icon.png" alt="Cars remaining" class="car-icon">
+
+                        <span id="cars-count">200</span>
+
+                    </div>
+
+                </div>
+
+                </div>
+
         </section>
 
         <!-- Painel de controles -->
         <aside class="controls-area">
+
             <div class="keypad">
 
                 <!-- Primeira linha -->
@@ -30,7 +57,7 @@
 
                 <div class="key" data-key="Numpad8">
                     8
-                    <span class="key-label">camera up</span>
+                    <span class="key-label">Camera up</span>
                 </div>
 
                 <div class="key" data-key="Numpad9">
@@ -46,17 +73,17 @@
                 <!-- Segunda linha -->
                 <div class="key" data-key="Numpad4">
                     4
-                    <span class="key-label">camera left</span>
+                    <span class="key-label">Camera left</span>
                 </div>
 
                 <div class="key" data-key="Numpad5">
                     5
-                    <span class="key-label">focus car</span>
+                    <span class="key-label">Focus car</span>
                 </div>
 
                 <div class="key" data-key="Numpad6">
                     6
-                    <span class="key-label">camera right</span>
+                    <span class="key-label">Camera right</span>
                 </div>
 
                 <div class="key" data-key="NumpadAdd">
@@ -72,7 +99,7 @@
 
                 <div class="key" data-key="Numpad2">
                     2
-                    <span class="key-label">camera down</span>
+                    <span class="key-label">Camera down</span>
                 </div>
 
                 <div class="key" data-key="Numpad3">
@@ -86,6 +113,7 @@
                 </div>
 
             </div>
+
         </aside>
 
     </main>

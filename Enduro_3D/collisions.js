@@ -34,7 +34,7 @@ class Collisions {
                 const overlapWidth =
                     Math.min(playerCar.xMax, opponentCar.xMax) -
                     Math.max(playerCar.xMin, opponentCar.xMin);
-
+                
                 const overlapDepth =
                     Math.min(playerCar.zMax, opponentCar.zMax) -
                     Math.max(playerCar.zMin, opponentCar.zMin);
@@ -109,7 +109,7 @@ class Collisions {
                 break;
 
             case "track-left":
-                speed = Math.min(this.normalSpeed-1, 0.0);
+                speed = Math.min(this.normalSpeed - 1, 0.0);
 
                 playerCar.horizontalMovement(
                     this.collisionPushSpeed * deltaTime
@@ -117,7 +117,7 @@ class Collisions {
                 break;
 
             case "track-right":
-                speed = Math.min(this.normalSpeed-1, 0.0);
+                speed = Math.min(this.normalSpeed - 1, 0.0);
 
                 playerCar.horizontalMovement(
                     -this.collisionPushSpeed * deltaTime
