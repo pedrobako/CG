@@ -149,8 +149,9 @@ body {
 #game-hud {
     position: absolute;
     bottom: 0;
-    left: 50%;
-    transform: translateX(-50%);
+    left: 39%;
+    
+    transform: translateY(-5%);
     z-index: 10;
     pointer-events: none;
 }
@@ -240,4 +241,72 @@ body {
     object-fit: contain;
     image-rendering: pixelated;
     flex-shrink: 0;
+}
+
+/* ==================================================
+   CONTROLES DO CARRO
+   ================================================== */
+
+.driving-controls {
+    position: absolute;
+    bottom: 0;
+    transform: translateY(-5%);
+    z-index: 11;
+
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+}
+
+.driving-controls-left {
+    left: 12px;
+}
+
+.driving-controls-right {
+    right: 12px;
+}
+
+.driving-button {
+    width: 100px;
+    height: 58px;
+
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 2px;
+
+    background-color: rgba(30, 30, 30, 0.45);
+    border: 2px solid rgba(255, 255, 255, 0.45);
+    border-radius: 12px;
+
+    color: rgba(255, 255, 255, 0.85);
+
+    cursor: pointer;
+    user-select: none;
+    -webkit-user-select: none;
+    touch-action: none;
+
+    transition:
+        background-color 0.1s,
+        transform 0.1s;
+}
+
+.driving-button:hover {
+    background-color: rgba(30, 30, 30, 0.65);
+}
+
+.driving-button:active {
+    background-color: rgba(30, 30, 30, 0.85);
+    transform: scale(0.94);
+}
+
+.button-icon {
+    font-size: 24px;
+    line-height: 24px;
+}
+
+.button-label {
+    font-size: 10px;
+    line-height: 12px;
 }

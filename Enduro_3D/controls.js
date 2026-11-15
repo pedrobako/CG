@@ -28,7 +28,7 @@ class Controls {
         });
 
         // Botões da interface
-        document.querySelectorAll(".key[data-key]").forEach((button) => {
+        document.querySelectorAll(".key[data-key], .driving-button[data-key]").forEach((button) => {
             const key = button.dataset.key;
 
             button.addEventListener("pointerdown", (event) => {
