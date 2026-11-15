@@ -50,7 +50,7 @@ body {
 .keypad {
     display: grid;
     grid-template-columns: repeat(4, 90px);
-    grid-template-rows: repeat(3, 90px);
+    grid-template-rows: repeat(4, 90px);
     gap: 8px;
     padding: 8px;
     background-color: #292929;
@@ -311,11 +311,18 @@ body {
     line-height: 12px;
 }
 
+
+/* ==================================================
+   RESPONSIVIDADE - CELULARES
+   ================================================== */
+
 /* Celulares na vertical */
 @media (max-width: 600px) and (orientation: portrait) {
 
     #game-hud {
-        transform: translateX(-50%) scale(0.72);
+        left: 50%;
+        bottom: 0;
+        transform: translate(-50%, -5%) scale(0.65);
         transform-origin: bottom center;
     }
 
@@ -350,6 +357,13 @@ body {
         width: 100%;
         min-width: 0;
         padding-top: 12px;
+    }
+
+    #game-hud {
+        left: 50%;
+        bottom: 0;
+        transform: translate(-50%, -5%) scale(0.80);
+        transform-origin: bottom center;
     }
 
 }

@@ -23,7 +23,9 @@ class Scene {
         this.createLateralObjects();
         this.distance = 0.0;
         this.level = 1;
-        this.carsRemaining = 200;
+        this.carsToOvertakePerLevel = 200;
+        this.carsRemaining = this.carsToOvertakePerLevel;
+        this.paused = false;
 
 
         const fov = 60 * Math.PI / 180;
@@ -42,6 +44,9 @@ class Scene {
 
     update(deltaTime) {
         this.controls.update();
+
+        if (this.paused)
+            return;
 
         const collisionType = Collisions.detectCollision(this.carPlayer, this.opponentCars, this.raceTrack);
 
@@ -85,9 +90,13 @@ class Scene {
             if (opponentCar.zMin > this.carPlayer.zMax && opponentCar.overtakeStatus == NOT_OVERTAKEN) {
                 opponentCar.overtakeStatus = OVERTAKEN;
                 this.carsRemaining--;
-                if (this.carsRemaining == 0){
-                    this.carsRemaining = 200;
+                if (this.carsRemaining == 0) {
+                    this.carsRemaining = this.carsToOvertakePerLevel;
                     this.level++;
+                    this.setDay();
+                }
+                if (this.carsRemaining == this.carsToOvertakePerLevel / 2) {
+                    this.setNight();
                 }
             }
             else if (opponentCar.zMax < this.carPlayer.zMin && opponentCar.overtakeStatus == OVERTAKEN) {
@@ -108,88 +117,6 @@ class Scene {
 
         document.getElementById("cars-count").textContent =
             this.carsRemaining;
-    }
-
-    draw() {
-
-        gl.clear(
-            gl.COLOR_BUFFER_BIT |
-            gl.DEPTH_BUFFER_BIT
-        );
-
-        gl.useProgram(program);
-
-        //Desenhar o carro do jogador
-        this.carPlayer.draw(
-            this.renderer,
-            this.camera.viewTransform,
-            this.projectionTransform,
-            this.lights,
-            this.viewPosition
-        );
-
-        //Desenhar os carros oponentes
-        for (let i = 0; i < this.opponentCars.length; i++) {
-            this.opponentCars[i].draw(
-                this.renderer,
-                this.camera.viewTransform,
-                this.projectionTransform,
-                this.lights,
-                this.viewPosition
-            )
-        }
-
-        //Desenhar o piso
-        this.floor.draw(
-            this.renderer,
-            this.camera.viewTransform,
-            this.projectionTransform,
-            this.lights,
-            this.viewPosition
-        );
-
-        // Desenhar a pista
-        this.raceTrack.draw(
-            this.renderer,
-            this.camera.viewTransform,
-            this.projectionTransform,
-            this.lights,
-            this.viewPosition
-        );
-
-        // Desenhar linhas auxiliares da pista
-        /*
-        this.raceTrackDebug = new RaceTrackDebug();
-        this.raceTrackDebug.draw(
-            this.renderer,
-            this.camera.viewTransform,
-            this.projectionTransform,
-            this.lights,
-            this.viewPosition
-        );
-        */
-
-        //Desenhando objetos na lateral da pista
-        for (const lateralObject of this.lateralObjects) {
-            lateralObject.draw(
-                this.renderer,
-                this.camera.viewTransform,
-                this.projectionTransform,
-                this.lights,
-                this.viewPosition
-            );
-        }
-
-        if (!this.isDay) {
-            // Desenhar a Lua
-            this.moon.draw(
-                this.renderer,
-                this.camera.viewTransform,
-                this.projectionTransform,
-                this.lights,
-                this.viewPosition
-            );
-        }
     }
 
     setNight() {
@@ -307,6 +234,19 @@ class Scene {
         }
     }
 
+    togglePause() {
+        this.paused = !this.paused;
+        this.lastTimestamp = undefined;
+    }
+
+    activateDemoMode() {
+        if (!this.start) {
+            this.carsToOvertakePerLevel = 10;
+            this.carsRemaining = 10;
+            this.updateHUD();
+        }
+    }
+
     execute(timestamp) {
         if (this.lastTimestamp === undefined) {
             this.lastTimestamp = timestamp;
@@ -321,6 +261,88 @@ class Scene {
         this.draw();
 
         requestAnimationFrame((timestamp) => this.execute(timestamp));
+    }
+
+    draw() {
+
+        gl.clear(
+            gl.COLOR_BUFFER_BIT |
+            gl.DEPTH_BUFFER_BIT
+        );
+
+        gl.useProgram(program);
+
+        //Desenhar o carro do jogador
+        this.carPlayer.draw(
+            this.renderer,
+            this.camera.viewTransform,
+            this.projectionTransform,
+            this.lights,
+            this.viewPosition
+        );
+
+        //Desenhar os carros oponentes
+        for (let i = 0; i < this.opponentCars.length; i++) {
+            this.opponentCars[i].draw(
+                this.renderer,
+                this.camera.viewTransform,
+                this.projectionTransform,
+                this.lights,
+                this.viewPosition
+            )
+        }
+
+        //Desenhar o piso
+        this.floor.draw(
+            this.renderer,
+            this.camera.viewTransform,
+            this.projectionTransform,
+            this.lights,
+            this.viewPosition
+        );
+
+        // Desenhar a pista
+        this.raceTrack.draw(
+            this.renderer,
+            this.camera.viewTransform,
+            this.projectionTransform,
+            this.lights,
+            this.viewPosition
+        );
+
+        // Desenhar linhas auxiliares da pista
+        /*
+        this.raceTrackDebug = new RaceTrackDebug();
+        this.raceTrackDebug.draw(
+            this.renderer,
+            this.camera.viewTransform,
+            this.projectionTransform,
+            this.lights,
+            this.viewPosition
+        );
+        */
+
+        //Desenhando objetos na lateral da pista
+        for (const lateralObject of this.lateralObjects) {
+            lateralObject.draw(
+                this.renderer,
+                this.camera.viewTransform,
+                this.projectionTransform,
+                this.lights,
+                this.viewPosition
+            );
+        }
+
+        if (!this.isDay) {
+            // Desenhar a Lua
+            this.moon.draw(
+                this.renderer,
+                this.camera.viewTransform,
+                this.projectionTransform,
+                this.lights,
+                this.viewPosition
+            );
+        }
     }
 
     init() {

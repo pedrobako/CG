@@ -86,7 +86,7 @@ class Controls {
                 break;
 
             case "ArrowDown":
-                if (this.scene.speed > -10.0) 
+                if (this.scene.speed > -10.0)
                     this.scene.speed -= 1.0;
                 break;
 
@@ -150,6 +150,18 @@ class Controls {
                     this.scene.setNight();
                 } else {
                     this.scene.setDay();
+                }
+                break;
+
+            case "KeyP":
+                this.scene.togglePause();
+                break;
+
+            case "KeyD":
+                if (!this.scene.start){
+                    this.scene.carsToOvertakePerLevel = 10;
+                    this.scene.carsRemaining = 10;
+                    this.scene.updateHUD();
                 }
                 break;
         }
