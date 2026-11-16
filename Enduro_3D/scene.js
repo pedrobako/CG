@@ -69,9 +69,8 @@ class Scene {
             for (const lateralObject of this.lateralObjects) {
                 lateralObject.verticalMovement(this.speed, deltaTime);
             }
+            this.lights.verticalMovement(this.speed, deltaTime);
         }
-
-        this.lights.verticalMovement(this.speed, deltaTime);
 
         this.updateOpponents();
 
@@ -237,6 +236,11 @@ class Scene {
     togglePause() {
         this.paused = !this.paused;
         this.lastTimestamp = undefined;
+    }
+
+    oldStyle(){
+        this.raceTrack.oldStyle = !this.raceTrack.oldStyle;
+        this.raceTrack.hasTexture = !this.raceTrack.hasTexture;
     }
 
     activateDemoMode() {

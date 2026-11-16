@@ -56,6 +56,7 @@ class RaceTrack extends SceneObject {
             raceTrackGeometry.normals,
             raceTrackGeometry.indices
         );
+        this.oldStyle = false;
         this.leftLimit = - TRACK_WIDTH / 2;
         this.rightLimit = TRACK_WIDTH / 2;
         this.hasTexture = true;
@@ -64,18 +65,78 @@ class RaceTrack extends SceneObject {
         this.texCoords = new Float32Array(this.baseTexCoords);
         this.textureOffset = 0.0;
         this.tileLength = RACE_TRACK_TILE_LENGTH;
+
+        // Superfície de asfalto
+        this.asphalt = new SceneObject(
+            asphaltGeometry.vertices,
+            asphaltGeometry.colors,
+            asphaltGeometry.normals,
+            asphaltGeometry.indices
+        );
+
+        // Linha central tracejada
+        this.centerLine = new SceneObject(
+            centerLineGeometry.vertices,
+            centerLineGeometry.colors,
+            centerLineGeometry.normals,
+            centerLineGeometry.indices
+        );
+        this.centerLine.baseVertices = new Float32Array(this.centerLine.vertices);
+        this.centerLine.offset = 0.0;
+
+        this.parts = [
+            this.asphalt,
+            this.centerLine
+        ];
     }
 
     verticalMovement(speed, deltaTime) {
         const displacement = speed * deltaTime;
 
-        this.textureOffset =
-            (this.textureOffset + displacement / this.tileLength) % 1.0;
+        // Movendo as laterais da pista
+        this.textureOffset = (this.textureOffset + displacement / this.tileLength) % 1.0;
 
         for (let i = 0; i < this.texCoords.length; i += 2) {
-            this.texCoords[i + 1] =
-                this.baseTexCoords[i + 1] - this.textureOffset;
+            this.texCoords[i + 1] = this.baseTexCoords[i + 1] - this.textureOffset;
         }
+
+        // Movendo a linha central
+        this.centerLine.offset += speed * deltaTime;
+
+        if (this.centerLine.offset >= 5.0) {
+            this.centerLine.offset -= 5.0;
+        }
+        this.centerLine.modelTransform = m4.translation(0, 0, this.centerLine.offset);
+    }
+
+    toggleTrack() {
+        this.oldStyle = !this.oldStyle;
+        this.hasTexture = !this.hasTexture;
+    }
+
+
+    draw(renderer, viewTransform, projectionTransform, lights, viewPosition) {
+
+        if (!this.oldStyle) {
+            for (const part of this.parts) {
+                part.draw(
+                    renderer,
+                    viewTransform,
+                    projectionTransform,
+                    lights,
+                    viewPosition
+                );
+            }
+        }
+
+        // Desenha as faixas laterais por cima.
+        super.draw(
+            renderer,
+            viewTransform,
+            projectionTransform,
+            lights,
+            viewPosition
+        );
     }
 }
 
@@ -101,8 +162,8 @@ class Moon extends SceneObject {
 
         //this.modelTransform = m4.translation(50, 20, -150);
         this.modelTransform = m4.multiply(m4.translation(40, 15, -100),
-                                            m4.scaling(0.7, 0.7, 0.7)
-                                );
+            m4.scaling(0.7, 0.7, 0.7)
+        );
         this.hasTexture = true;
         this.texture = renderer.loadTexture("textures/lua.jpg");
         this.texCoords = moonGeometry.texCoords;

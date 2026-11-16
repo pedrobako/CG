@@ -363,40 +363,40 @@ class Renderer {
     }
 
     createRaceTrackTexture() {
-    const gl = this.gl;
+        const gl = this.gl;
 
-    const texture = gl.createTexture();
-    gl.bindTexture(gl.TEXTURE_2D, texture);
+        const texture = gl.createTexture();
+        gl.bindTexture(gl.TEXTURE_2D, texture);
 
-    // Duas faixas horizontais:
-    // uma vermelha e outra branca.
-    const pixels = new Uint8Array([
-        255, 0, 0, 255,       // Vermelho
-        255, 0, 0, 255,       // Vermelho
+        // Duas faixas horizontais:
+        // uma vermelha e outra branca.
+        const pixels = new Uint8Array([
+            255, 0, 0, 255,       // Vermelho
+            255, 0, 0, 255,       // Vermelho
 
-        255, 255, 255, 255,   // Branco
-        255, 255, 255, 255    // Branco
-    ]);
+            255, 255, 255, 255,   // Branco
+            255, 255, 255, 255    // Branco
+        ]);
 
-    gl.texImage2D(
-        gl.TEXTURE_2D,
-        0,
-        gl.RGBA,
-        2,
-        2,
-        0,
-        gl.RGBA,
-        gl.UNSIGNED_BYTE,
-        pixels
-    );
+        gl.texImage2D(
+            gl.TEXTURE_2D,
+            0,
+            gl.RGBA,
+            2,
+            2,
+            0,
+            gl.RGBA,
+            gl.UNSIGNED_BYTE,
+            pixels
+        );
 
-    gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, gl.REPEAT);
-    gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.REPEAT);
-    gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.NEAREST);
-    gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.NEAREST);
+        gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, gl.REPEAT);
+        gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.REPEAT);
+        gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.NEAREST);
+        gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.NEAREST);
 
-    gl.bindTexture(gl.TEXTURE_2D, null);
+        gl.bindTexture(gl.TEXTURE_2D, null);
 
-    return texture;
-}
+        return texture;
+    }
 }

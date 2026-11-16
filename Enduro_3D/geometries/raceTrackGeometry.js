@@ -1,9 +1,9 @@
 
 function raceTrackVertices() {
-    const halfTrackWidth = TRACK_WIDTH/2;
+    const halfTrackWidth = TRACK_WIDTH / 2;
     const lineWidth = 0.5;
     const length = 200.0;
-    const halfLength = TRACK_LENGHT/2;
+    const halfLength = TRACK_LENGHT / 2;
     const y = 0.02;
 
     const outerLeft = -halfTrackWidth - lineWidth;
@@ -16,14 +16,14 @@ function raceTrackVertices() {
         // Linha lateral esquerda
         outerLeft, y, -halfLength, // 0
         innerLeft, y, -halfLength, // 1
-        innerLeft, y,  halfLength, // 2
-        outerLeft, y,  halfLength, // 3
+        innerLeft, y, halfLength, // 2
+        outerLeft, y, halfLength, // 3
 
         // Linha lateral direita
         innerRight, y, -halfLength, // 4
         outerRight, y, -halfLength, // 5
-        outerRight, y,  halfLength, // 6
-        innerRight, y,  halfLength  // 7
+        outerRight, y, halfLength, // 6
+        innerRight, y, halfLength  // 7
     ]);
 }
 
@@ -52,25 +52,6 @@ function raceTrackIndices() {
         // Linha direita
         4, 6, 5,
         4, 7, 6
-    ]);
-}
-
-function raceTrackTexCoords() {
-
-    const repeatCount = TRACK_LENGHT / RACE_TRACK_TILE_LENGTH;
-
-    return new Float32Array([
-        // Faixa esquerda
-        0, 0,
-        1, 0,
-        1, repeatCount,
-        0, repeatCount,
-
-        // Faixa direita
-        0, 0,
-        1, 0,
-        1, repeatCount,
-        0, repeatCount
     ]);
 }
 
@@ -192,6 +173,120 @@ function generateRaceTrackDebugIndices() {
     ]);
 }
 
+// ==================================================
+// GENERATE ASPHALT GEOMETRY
+// ==================================================
+
+function asphaltVertices() {
+
+    const halfTrackWidth = TRACK_WIDTH / 2 + 0.1;
+    const halfLength = TRACK_LENGHT / 2;
+    const y = 0.01;
+
+    return new Float32Array([
+        -halfTrackWidth, y, -halfLength,
+        halfTrackWidth, y, -halfLength,
+        halfTrackWidth, y, halfLength,
+        -halfTrackWidth, y, halfLength
+    ]);
+}
+
+function asphaltColors() {
+
+    const color = [0.18, 0.18, 0.18];
+    const colors = [];
+
+    for (let i = 0; i < 4; i++) {
+        colors.push(...color);
+    }
+
+    return new Float32Array(colors);
+}
+
+function asphaltIndices() {
+
+    return new Uint16Array([
+        0, 2, 1,
+        0, 3, 2
+    ]);
+}
+
+const asphaltGeometry = addNormalsToGeometry(
+    asphaltVertices(),
+    asphaltColors(),
+    asphaltIndices()
+);
+
+// ==================================================
+// GENERATE CENTER LINE GEOMETRY
+// ==================================================
+
+function centerLineVertices() {
+
+    const lineWidth = 0.10;
+    const dashLength = 2.0;
+    const dashSpacing = 3.0;
+
+    const halfLength = TRACK_LENGHT / 2;
+    const y = 0.03;
+
+    const vertices = [];
+
+    // Margem de 3 metros antes do início da pista.
+    const startZ = -halfLength - dashSpacing;
+
+    // Limite próximo ao carro.
+    const endZ = -3.0;
+
+    for (let z = startZ; z < endZ;
+        z += dashLength + dashSpacing) {
+
+        vertices.push(
+            -lineWidth / 2, y, z,
+            lineWidth / 2, y, z,
+            lineWidth / 2, y, z + dashLength,
+            -lineWidth / 2, y, z + dashLength
+        );
+    }
+
+    return new Float32Array(vertices);
+}
+
+function centerLineColors() {
+
+    const colors = [];
+    const color = [1.0, 1.0, 1.0];
+
+    const vertexCount = centerLineVertices().length / 3;
+
+    for (let i = 0; i < vertexCount; i++) {
+        colors.push(...color);
+    }
+
+    return new Float32Array(colors);
+}
+
+function centerLineIndices() {
+
+    const indices = [];
+    const vertexCount = centerLineVertices().length / 3;
+
+    for (let i = 0; i < vertexCount; i += 4) {
+
+        indices.push(
+            i, i + 2, i + 1,
+            i, i + 3, i + 2
+        );
+    }
+
+    return new Uint16Array(indices);
+}
+
+const centerLineGeometry = addNormalsToGeometry(
+    centerLineVertices(),
+    centerLineColors(),
+    centerLineIndices()
+);
 
 const raceTrackDebugGeometry = addNormalsToGeometry(
     generateRaceTrackDebugVertices(),

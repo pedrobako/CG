@@ -158,6 +158,10 @@ class Controls {
             case "KeyD":
                 this.scene.activateDemoMode();
                 break;
+
+            case "KeyT":
+                this.scene.oldStyle();
+                break;
         }
     }
 }

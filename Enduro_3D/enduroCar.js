@@ -225,8 +225,8 @@ class EnduroCar {
         lights,
         viewPosition
     ) {
-        for (const parte of this.parts) {
-            parte.draw(
+        for (const part of this.parts) {
+            part.draw(
                 renderer,
                 viewTransform,
                 projectionTransform,
