@@ -26,6 +26,7 @@ class Scene {
         this.carsToOvertakePerLevel = 200;
         this.carsRemaining = this.carsToOvertakePerLevel;
         this.paused = false;
+        this.oldStyle();
 
 
         const fov = 60 * Math.PI / 180;
