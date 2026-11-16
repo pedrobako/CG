@@ -1,6 +1,8 @@
 const canvas = document.getElementById("canvas");
 const gl = canvas.getContext("webgl2");
 
+console.log("MAIN 50");
+
 if (!gl) {
     throw new Error("WebGL 2 não é suportado.");
 }
@@ -39,7 +41,7 @@ const fragmentShaderSource = `#version 300 es
 
 precision mediump float;
 
-#define MAX_LIGHTS 100
+#define MAX_LIGHTS 50
 #define SUN_LIGHT 0
 #define AMBIENT_LIGHT 1
 #define FIRST_HEADLIGHT 2
