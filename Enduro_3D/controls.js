@@ -10,16 +10,27 @@ class Controls {
 
         // Teclado físico
         document.addEventListener("keydown", (event) => {
+            const button = document.querySelector(`[data-key="${event.code}"]`);
+
             if (this.isContinuousControl(event.code)) {
                 event.preventDefault();
                 this.activeControls.add(event.code);
-            } else {
-                this.handleControl(event.code);
+                button?.classList.add("is-pressed");
+            } else if (!event.repeat) {
+                if (button) {
+                    button.classList.add("is-pressed");
+                    button.click();
+                } else {
+                    this.handleControl(event.code);
+                }
             }
         });
 
         document.addEventListener("keyup", (event) => {
             this.activeControls.delete(event.code);
+
+            const button = document.querySelector(`[data-key="${event.code}"]`);
+            button?.classList.remove("is-pressed");
         });
 
         // Evita manter teclas pressionadas ao perder o foco da janela

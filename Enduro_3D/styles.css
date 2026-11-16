@@ -94,6 +94,12 @@ body {
     box-shadow: inset 0 2px 5px #111;
 }
 
+.key[data-key].is-pressed {
+    background: linear-gradient(#202020, #383838);
+    transform: scale(0.96);
+    box-shadow: inset 0 2px 5px #111;
+}
+
 /* Descrições dentro das teclas */
 .key-label {
     position: static;
@@ -297,6 +303,11 @@ body {
 }
 
 .driving-button:active {
+    background-color: rgba(30, 30, 30, 0.85);
+    transform: scale(0.94);
+}
+
+.driving-button.is-pressed {
     background-color: rgba(30, 30, 30, 0.85);
     transform: scale(0.94);
 }
