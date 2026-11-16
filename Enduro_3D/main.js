@@ -1,8 +1,6 @@
 const canvas = document.getElementById("canvas");
 const gl = canvas.getContext("webgl2");
 
-console.log("MAIN 50");
-
 if (!gl) {
     throw new Error("WebGL 2 não é suportado.");
 }
