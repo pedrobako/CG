@@ -29,6 +29,9 @@ class Scene {
         this.timeLimit = 1.35 * this.carsToOvertakePerLevel;
         this.timeRemaining = this.timeLimit;
         this.gameOver = false;
+        this.gameMessage = document.getElementById("game-message");
+        this.messageTimeRemaining = 0;
+        this.levelUpMessageDuration = 2.0;
 
         const fov = 60 * Math.PI / 180;
         const aspect = canvas.width / canvas.height;
@@ -53,6 +56,16 @@ class Scene {
         if (this.gameOver)
             return;
 
+        if (this.messageTimeRemaining > 0) {
+            this.messageTimeRemaining -= deltaTime;
+
+            if (this.messageTimeRemaining <= 0) {
+                this.messageTimeRemaining = 0;
+                this.gameMessage.classList.remove("visible");
+                this.gameMessage.textContent = "";
+            }
+        }
+
         const collisionType = Collisions.detectCollision(this.carPlayer, this.opponentCars, this.raceTrack);
 
         if (collisionType)
@@ -74,6 +87,8 @@ class Scene {
                 this.gameOver = true;
                 this.start = false;
                 this.speed = 0;
+                this.gameMessage.textContent = "GAME OVER!";
+                this.gameMessage.classList.add("visible");
                 return;
             }
 
@@ -96,22 +111,17 @@ class Scene {
         this.checkOvertake();
 
         this.updateHUD();
-
-        console.log(this.speed);
     }
 
     //Checando as ultrapassagens
     checkOvertake() {
-        console.log("Tempo restante: " + this.timeRemaining);
         for (const opponentCar of this.opponentCars) {
             if (opponentCar.zMin > this.carPlayer.zMax && opponentCar.overtakeStatus == NOT_OVERTAKEN) {
                 opponentCar.overtakeStatus = OVERTAKEN;
                 this.carsRemaining--;
                 if (this.carsRemaining == 0) {
                     this.carsRemaining = this.carsToOvertakePerLevel;
-                    this.level++;
-                    this.timeLimit = this.timeLimit - (0.01 * this.timeLimit);
-                    this.timeRemaining = this.timeLimit;
+                    this.levelUp();
                     this.setDay();
                 }
                 if (this.timeRemaining < this.timeLimit / 2) {
@@ -123,6 +133,15 @@ class Scene {
                 this.carsRemaining++;
             }
         }
+    }
+
+    levelUp() {
+        this.level++;
+        this.gameMessage.textContent = "LEVEL UP!";
+        this.gameMessage.classList.add("visible");
+        this.messageTimeRemaining = this.levelUpMessageDuration;
+        this.timeLimit = this.timeLimit - (0.01 * this.timeLimit);
+        this.timeRemaining = this.timeLimit;
     }
 
     // Atualização da pontuação
@@ -267,7 +286,7 @@ class Scene {
         if (!this.start) {
             this.carsToOvertakePerLevel = 10;
             this.carsRemaining = 10;
-            this.timeLimit = 15;
+            this.timeLimit = 16;
             this.timeRemaining = this.timeLimit;
             this.updateHUD();
         }

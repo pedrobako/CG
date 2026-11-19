@@ -330,4 +330,5 @@ function reset() {
     scene.destroy();
     scene = new Scene(gl, program);
     scene.init();
+    scene.gameMessage.classList.remove("visible");
 }
