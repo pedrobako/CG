@@ -26,6 +26,9 @@ class Scene {
         this.carsToOvertakePerLevel = 200;
         this.carsRemaining = this.carsToOvertakePerLevel;
         this.paused = false;
+        this.timeLimit = 1.35 * this.carsToOvertakePerLevel;
+        this.timeRemaining = this.timeLimit;
+        this.gameOver = false;
 
         const fov = 60 * Math.PI / 180;
         const aspect = canvas.width / canvas.height;
@@ -47,6 +50,9 @@ class Scene {
         if (this.paused)
             return;
 
+        if (this.gameOver)
+            return;
+
         const collisionType = Collisions.detectCollision(this.carPlayer, this.opponentCars, this.raceTrack);
 
         if (collisionType)
@@ -59,6 +65,18 @@ class Scene {
                 car.rotateWheels(deltaTime);
         }
         if (this.start) {
+
+            // Atualizar o tempo restante disponível
+            this.timeRemaining -= deltaTime;
+            // E verificar se o tempo acabou
+            if (this.timeRemaining <= 0) {
+                this.timeRemaining = 0;
+                this.gameOver = true;
+                this.start = false;
+                this.speed = 0;
+                return;
+            }
+
             // Atualizar distância percorrida
             this.distance += Math.max(1, this.speed) * deltaTime;
 
@@ -84,6 +102,7 @@ class Scene {
 
     //Checando as ultrapassagens
     checkOvertake() {
+        console.log("Tempo restante: " + this.timeRemaining);
         for (const opponentCar of this.opponentCars) {
             if (opponentCar.zMin > this.carPlayer.zMax && opponentCar.overtakeStatus == NOT_OVERTAKEN) {
                 opponentCar.overtakeStatus = OVERTAKEN;
@@ -91,9 +110,11 @@ class Scene {
                 if (this.carsRemaining == 0) {
                     this.carsRemaining = this.carsToOvertakePerLevel;
                     this.level++;
+                    this.timeLimit = this.timeLimit - (0.01 * this.timeLimit);
+                    this.timeRemaining = this.timeLimit;
                     this.setDay();
                 }
-                if (this.carsRemaining == this.carsToOvertakePerLevel / 2) {
+                if (this.timeRemaining < this.timeLimit / 2) {
                     this.setNight();
                 }
             }
@@ -246,6 +267,8 @@ class Scene {
         if (!this.start) {
             this.carsToOvertakePerLevel = 10;
             this.carsRemaining = 10;
+            this.timeLimit = 15;
+            this.timeRemaining = this.timeLimit;
             this.updateHUD();
         }
     }

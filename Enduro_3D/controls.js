@@ -89,6 +89,7 @@ class Controls {
     }
 
     handleContinuousControl(key, deltaTime) {
+        if (this.scene.gameOver) return;
         switch (key) {
             case "ArrowLeft":
                 if (this.scene.start) {
@@ -103,8 +104,10 @@ class Controls {
                 break;
 
             case "ArrowDown":
+            if (this.scene.start) {    
                 this.scene.speed = Math.max(-10.0, this.scene.speed - 30.0 * deltaTime);
                 break;
+            }
 
             case "Space":
             case "ArrowUp":
