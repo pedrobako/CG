@@ -26,8 +26,6 @@ class Scene {
         this.carsToOvertakePerLevel = 200;
         this.carsRemaining = this.carsToOvertakePerLevel;
         this.paused = false;
-        this.oldStyle();
-
 
         const fov = 60 * Math.PI / 180;
         const aspect = canvas.width / canvas.height;
@@ -194,7 +192,7 @@ class Scene {
                         pos = POS_RIGHT;
 
                 this.lights.removeCarHeadlights(this.opponentCars[i].headlightsId);
-                
+
                 this.opponentCars[i] = this.getOneOpponent(pos, -100);
             }
         }
@@ -206,7 +204,7 @@ class Scene {
             new Billboard(this.renderer, this.lights, -20, "left", "textures/outdoor1.jpg"));
         this.lateralObjects.push(
             new Billboard(this.renderer, this.lights, -60, "right", "textures/outdoor2.jpg"));
-        
+
         this.lateralObjects.push(this.raceTrack);
     }
 
@@ -239,7 +237,7 @@ class Scene {
         this.lastTimestamp = undefined;
     }
 
-    oldStyle(){
+    oldStyle() {
         this.raceTrack.oldStyle = !this.raceTrack.oldStyle;
         this.raceTrack.hasTexture = !this.raceTrack.hasTexture;
     }
@@ -265,7 +263,7 @@ class Scene {
 
         this.draw();
 
-        requestAnimationFrame((timestamp) => this.execute(timestamp));
+        this.animationFrameId = requestAnimationFrame((timestamp) => this.execute(timestamp));
     }
 
     draw() {
@@ -351,8 +349,12 @@ class Scene {
     }
 
     init() {
+        this.animationFrameId = requestAnimationFrame((timestamp) => this.execute(timestamp));
+    }
 
-        requestAnimationFrame((timestamp) => this.execute(timestamp));
+    destroy() {
+        cancelAnimationFrame(this.animationFrameId);
+        this.controls.destroy();
     }
 }
 

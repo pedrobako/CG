@@ -4,12 +4,13 @@ class Controls {
         this.camera = camera;
         this.lights = lights;
         this.carPlayer = carPlayer;
+        this.listeners = [];
 
         // Controles contínuos ativos
         this.activeControls = new Set();
 
         // Teclado físico
-        document.addEventListener("keydown", (event) => {
+        this.addListener(document, "keydown", (event) => {
             const button = document.querySelector(`[data-key="${event.code}"]`);
 
             if (this.isContinuousControl(event.code)) {
@@ -26,7 +27,7 @@ class Controls {
             }
         });
 
-        document.addEventListener("keyup", (event) => {
+        this.addListener(document, "keyup", (event) => {
             this.activeControls.delete(event.code);
 
             const button = document.querySelector(`[data-key="${event.code}"]`);
@@ -34,7 +35,7 @@ class Controls {
         });
 
         // Evita manter teclas pressionadas ao perder o foco da janela
-        window.addEventListener("blur", () => {
+        this.addListener(window, "blur", () => {
             this.activeControls.clear();
         });
 
@@ -42,7 +43,7 @@ class Controls {
         document.querySelectorAll(".key[data-key], .driving-button[data-key]").forEach((button) => {
             const key = button.dataset.key;
 
-            button.addEventListener("pointerdown", (event) => {
+            this.addListener(button, "pointerdown", (event) => {
                 if (!this.isContinuousControl(key)) return;
 
                 event.preventDefault();
@@ -54,12 +55,12 @@ class Controls {
                 this.activeControls.delete(key);
             };
 
-            button.addEventListener("pointerup", stopControl);
-            button.addEventListener("pointercancel", stopControl);
-            button.addEventListener("lostpointercapture", stopControl);
+            this.addListener(button, "pointerup", stopControl);
+            this.addListener(button, "pointercancel", stopControl);
+            this.addListener(button, "lostpointercapture", stopControl);
 
             // Os controles de ação única continuam usando click
-            button.addEventListener("click", () => {
+            this.addListener(button, "click", () => {
                 if (!this.isContinuousControl(key)) {
                     this.handleControl(key);
                 }
@@ -72,6 +73,7 @@ class Controls {
             "ArrowLeft",
             "ArrowRight",
             "ArrowDown",
+            "ArrowUp",
             "Space",
             "Numpad8",
             "Numpad2",
@@ -89,11 +91,15 @@ class Controls {
     handleContinuousControl(key, deltaTime) {
         switch (key) {
             case "ArrowLeft":
-                this.carPlayer.horizontalMovement(-1.5 * deltaTime);
+                if (this.scene.start) {
+                    this.carPlayer.horizontalMovement(-1.5 * deltaTime);
+                }
                 break;
 
             case "ArrowRight":
-                this.carPlayer.horizontalMovement(1.5 * deltaTime);
+                if (this.scene.start) {
+                    this.carPlayer.horizontalMovement(1.5 * deltaTime);
+                }
                 break;
 
             case "ArrowDown":
@@ -101,6 +107,7 @@ class Controls {
                 break;
 
             case "Space":
+            case "ArrowUp":
                 this.scene.speed = Math.min(20.0, this.scene.speed + 30.0 * deltaTime);
                 this.scene.start = true;
                 break;
@@ -173,6 +180,23 @@ class Controls {
             case "KeyT":
                 this.scene.oldStyle();
                 break;
+
+            case "KeyR":
+                reset();
+                break;
         }
+    }
+
+    addListener(target, event, handler) {
+        target.addEventListener(event, handler);
+        this.listeners.push({ target, event, handler });
+    }
+
+    destroy() {
+        for (const { target, event, handler } of this.listeners) {
+            target.removeEventListener(event, handler);
+        }
+        this.listeners = [];
+        this.activeControls.clear();
     }
 }

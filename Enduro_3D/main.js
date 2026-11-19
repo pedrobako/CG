@@ -302,6 +302,7 @@ gl.enable(
 
 const gltfLoader = new GLTFLoader();
 let carPiece = null;
+let scene = null;
 
 gltfLoader.load("models/enduroCar.glb")
     .then(resultado => {
@@ -312,7 +313,7 @@ gltfLoader.load("models/enduroCar.glb")
         );
 
         // Criar e iniciar a cena normalmente.
-        const scene = new Scene(gl, program);
+        scene = new Scene(gl, program);
         scene.init();
 
     })
@@ -322,3 +323,11 @@ gltfLoader.load("models/enduroCar.glb")
             erro
         );
     });
+
+function reset() {
+    if (!scene) return;
+
+    scene.destroy();
+    scene = new Scene(gl, program);
+    scene.init();
+}
