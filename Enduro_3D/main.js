@@ -39,7 +39,7 @@ const fragmentShaderSource = `#version 300 es
 
 precision mediump float;
 
-#define MAX_LIGHTS 50
+#define MAX_LIGHTS 30
 #define SUN_LIGHT 0
 #define AMBIENT_LIGHT 1
 #define FIRST_HEADLIGHT 2
